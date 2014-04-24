@@ -51,7 +51,6 @@
     <Compile Include="QueryBuilding\AqlQueryModelVisitor.cs" />
     <Compile Include="QueryBuilding\ParameterCollection.cs" />
     <Compile Include="QueryBuilding\QueryBuilder.cs" />
-    <Compile Include="RelinqSample.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
