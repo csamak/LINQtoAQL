@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="AqlQueryable.cs" />
     <Compile Include="AqlQueryExecutor.cs" />
+    <Compile Include="DataAnnotations\Dataset.cs" />
     <Compile Include="DataAnnotations\Field.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueryBuilding\AqlExpressionVisitor.cs" />
