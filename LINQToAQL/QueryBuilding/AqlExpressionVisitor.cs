@@ -1,6 +1,10 @@
 ﻿using System;
+using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Text;
+using LINQToAQL.DataAnnotations;
+using LINQToAQL.Extensions;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Linq.Parsing;
@@ -83,7 +87,10 @@ namespace LINQToAQL.QueryBuilding
         protected override Expression VisitMemberExpression(MemberExpression expression)
         {
             VisitExpression(expression.Expression);
-            _aqlExpression.AppendFormat(".{0}", expression.Member.Name);
+            string field = expression.Expression.Type.GetMember(expression.Member.Name)
+                .First(m => m.MemberType == MemberTypes.Property || m.MemberType == MemberTypes.Field)
+                .GetAttributeValue((FieldAttribute f) => f.Name);
+            _aqlExpression.AppendFormat(".{0}", field ?? expression.Member.Name);
             return expression;
         }
 
@@ -111,13 +118,23 @@ namespace LINQToAQL.QueryBuilding
 
         protected override Exception CreateUnhandledItemException<T>(T unhandledItem, string visitMethod)
         {
-            return new NotSupportedException(string.Format("The expression '{0}' (type: {1}) is not supported by this LINQ provider!", FormatUnhandledItem(unhandledItem), typeof(T)));
+            return new NotSupportedException(string.Format("The expression '{0}' (type: {1}) is not supported.", FormatUnhandledItem(unhandledItem), typeof(T)));
         }
 
         private static string FormatUnhandledItem<T>(T unhandledItem)
         {
             var exp = unhandledItem as Expression;
             return exp != null ? FormattingExpressionTreeVisitor.Format(exp) : unhandledItem.ToString();
+        }
+
+        private static Type GetMemberType(MemberExpression exp)
+        {
+            MemberTypes memberType = exp.Member.MemberType;
+            if (memberType == MemberTypes.Field)
+                return ((FieldInfo) exp.Member).FieldType;
+            if (memberType == MemberTypes.Property)
+                return ((PropertyInfo) exp.Member).PropertyType;
+            throw new InvalidOperationException(string.Format("Member type {0} not supported.", memberType.ToString()));
         }
     }
 }

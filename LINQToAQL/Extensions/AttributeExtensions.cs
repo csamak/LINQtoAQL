@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Reflection;
 
 namespace LINQToAQL.Extensions
 {
@@ -10,6 +11,13 @@ namespace LINQToAQL.Extensions
             Func<TAttribute, TValue> valueSelector) where TAttribute : Attribute
         {
             var att = type.GetCustomAttributes(typeof (TAttribute), true).FirstOrDefault() as TAttribute;
+            return att != null ? valueSelector(att) : default(TValue);
+        }
+
+        public static TValue GetAttributeValue<TAttribute, TValue>(this MemberInfo type,
+            Func<TAttribute, TValue> valueSelector) where TAttribute : Attribute
+        {
+            var att = type.GetCustomAttributes(typeof(TAttribute), true).FirstOrDefault() as TAttribute;
             return att != null ? valueSelector(att) : default(TValue);
         }
     }
