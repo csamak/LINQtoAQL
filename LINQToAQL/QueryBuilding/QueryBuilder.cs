@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using LINQToAQL.DataAnnotations;
+using LINQToAQL.Extensions;
 using Remotion.Linq.Clauses;
 
 namespace LINQToAQL.QueryBuilding
@@ -21,8 +24,9 @@ namespace LINQToAQL.QueryBuilding
 
         public void AddFromPart(IQuerySource querySource)
         {
-            //another option rather than class name?
-            FromParts.Add(string.Format("${0} in dataset {1}", querySource.ItemName, querySource.ItemType.Name));
+            string dataset = querySource.ItemType.GetAttributeValue((DatasetAttribute d) => d.Name);
+            FromParts.Add(string.Format("${0} in dataset {1}", querySource.ItemName,
+                dataset ?? querySource.ItemType.Name));
         }
 
         public void AddWherePart(string formatString, params object[] args)
@@ -40,7 +44,7 @@ namespace LINQToAQL.QueryBuilding
             var stringBuilder = new StringBuilder();
             if (string.IsNullOrEmpty(SelectPart) || FromParts.Count == 0)
                 throw new InvalidOperationException("A query must have a return and at least one from.");
-            foreach (var curr in FromParts) //join later
+            foreach (string curr in FromParts) //join later
                 stringBuilder.AppendFormat("for {0}", curr);
             if (WhereParts.Count > 0)
                 stringBuilder.AppendFormat(" where {0}", string.Join(" and ", WhereParts));

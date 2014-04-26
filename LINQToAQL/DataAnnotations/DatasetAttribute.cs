@@ -3,10 +3,11 @@
 namespace LINQToAQL.DataAnnotations
 {
     [AttributeUsage(AttributeTargets.Class)]
-    public class Dataset : Attribute
+    public class DatasetAttribute : Attribute
     {
-        public Dataset(string name)
+        public DatasetAttribute(string name)
         {
+            Name = name;
             Open = false;
         }
 
