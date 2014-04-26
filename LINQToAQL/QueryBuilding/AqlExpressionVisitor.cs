@@ -98,7 +98,10 @@ namespace LINQToAQL.QueryBuilding
         {
             //var namedParameter = _parameters.AddParameter(expression.Value);
             //_aqlExpression.AppendFormat(":{0}", namedParameter.Name);
-            _aqlExpression.Append(expression.Value);
+            if (expression.Type.FullName == "System.DateTime") //should we check expression.Value instead?
+                _aqlExpression.AppendFormat("datetime('{0}')", ((DateTime) expression.Value).ToString("O"));
+            else
+                _aqlExpression.Append(expression.Value);
             return expression;
         }
 
@@ -131,9 +134,9 @@ namespace LINQToAQL.QueryBuilding
         {
             MemberTypes memberType = exp.Member.MemberType;
             if (memberType == MemberTypes.Field)
-                return ((FieldInfo) exp.Member).FieldType;
+                return ((FieldInfo)exp.Member).FieldType;
             if (memberType == MemberTypes.Property)
-                return ((PropertyInfo) exp.Member).PropertyType;
+                return ((PropertyInfo)exp.Member).PropertyType;
             throw new InvalidOperationException(string.Format("Member type {0} not supported.", memberType.ToString()));
         }
     }
