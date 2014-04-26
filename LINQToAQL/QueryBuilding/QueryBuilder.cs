@@ -21,9 +21,8 @@ namespace LINQToAQL.QueryBuilding
 
         public void AddFromPart(IQuerySource querySource)
         {
-            //TODO: check out querysource.itemname
-            //FromParts.Add(string.Format("{0} as {1}", querySource.ItemName, querySource.ItemName));
-            FromParts.Add(string.Format("${0}", querySource.ItemName));
+            //another option rather than class name?
+            FromParts.Add(string.Format("${0} in dataset {1}", querySource.ItemName, querySource.ItemType.Name));
         }
 
         public void AddWherePart(string formatString, params object[] args)
@@ -42,7 +41,7 @@ namespace LINQToAQL.QueryBuilding
             if (string.IsNullOrEmpty(SelectPart) || FromParts.Count == 0)
                 throw new InvalidOperationException("A query must have a return and at least one from.");
             foreach (var curr in FromParts) //join later
-                stringBuilder.AppendFormat("for {0} in dataset **todo** " + Environment.NewLine, curr);
+                stringBuilder.AppendFormat("for {0}", curr);
             if (WhereParts.Count > 0)
                 stringBuilder.AppendFormat(" where {0}", string.Join(" and ", WhereParts));
             if (OrderByParts.Count > 0)
