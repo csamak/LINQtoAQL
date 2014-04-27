@@ -44,8 +44,7 @@ namespace LINQToAQL.QueryBuilding
             var stringBuilder = new StringBuilder();
             if (string.IsNullOrEmpty(SelectPart) || FromParts.Count == 0)
                 throw new InvalidOperationException("A query must have a return and at least one from.");
-            foreach (string curr in FromParts) //join later
-                stringBuilder.AppendFormat("for {0}", curr);
+            stringBuilder.Append(string.Join(" ", FromParts.Select(f => string.Format("for {0}", f))));
             if (WhereParts.Count > 0)
                 stringBuilder.AppendFormat(" where {0}", string.Join(" and ", WhereParts));
             if (OrderByParts.Count > 0)

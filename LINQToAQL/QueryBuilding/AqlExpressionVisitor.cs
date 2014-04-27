@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -99,7 +100,7 @@ namespace LINQToAQL.QueryBuilding
             //var namedParameter = _parameters.AddParameter(expression.Value);
             //_aqlExpression.AppendFormat(":{0}", namedParameter.Name);
             if (expression.Type.FullName == "System.DateTime") //should we check expression.Value instead?
-                _aqlExpression.AppendFormat("datetime('{0}')", ((DateTime) expression.Value).ToString("O"));
+                _aqlExpression.AppendFormat("datetime('{0}')", ((DateTime)expression.Value).ToString("O"));
             else
                 _aqlExpression.Append(expression.Value);
             return expression;
@@ -119,6 +120,36 @@ namespace LINQToAQL.QueryBuilding
             return base.VisitMethodCallExpression(expression);
         }
 
+        protected override Expression VisitNewExpression(NewExpression expression)
+        {
+            _aqlExpression.Append("{");
+            for (int i = 0; i < expression.Arguments.Count; i++)
+            {
+                _aqlExpression.AppendFormat(" \"{0}\": ", expression.Members[i].Name);
+                VisitExpression(expression.Arguments[i]);
+                if (i < expression.Arguments.Count - 1) //better way?
+                    _aqlExpression.Append(',');
+            }
+            _aqlExpression.Append(" }");
+            return expression;
+        }
+
+        protected override Expression VisitUnaryExpression(UnaryExpression expression)
+        {
+            if (expression.NodeType == ExpressionType.Convert)
+            {
+                //TODO: more intelligent converts?
+                VisitExpression(expression.Operand);
+                return expression;
+            }
+            _aqlExpression.Append(expression.NodeType);
+            _aqlExpression.Append('(');
+            VisitExpression(expression.Operand);
+            _aqlExpression.Append(')');
+
+            return expression;
+        }
+
         protected override Exception CreateUnhandledItemException<T>(T unhandledItem, string visitMethod)
         {
             return new NotSupportedException(string.Format("The expression '{0}' (type: {1}) is not supported.", FormatUnhandledItem(unhandledItem), typeof(T)));
@@ -128,16 +159,6 @@ namespace LINQToAQL.QueryBuilding
         {
             var exp = unhandledItem as Expression;
             return exp != null ? FormattingExpressionTreeVisitor.Format(exp) : unhandledItem.ToString();
-        }
-
-        private static Type GetMemberType(MemberExpression exp)
-        {
-            MemberTypes memberType = exp.Member.MemberType;
-            if (memberType == MemberTypes.Field)
-                return ((FieldInfo)exp.Member).FieldType;
-            if (memberType == MemberTypes.Property)
-                return ((PropertyInfo)exp.Member).PropertyType;
-            throw new InvalidOperationException(string.Format("Member type {0} not supported.", memberType.ToString()));
         }
     }
 }
