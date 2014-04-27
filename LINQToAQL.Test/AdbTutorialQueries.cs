@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Device.Location;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Security.Cryptography;
 using LINQToAQL.DataAnnotations;
 using LINQToAQL.QueryBuilding;
 using LINQToAQL.Test.Annotations;
@@ -24,8 +25,8 @@ namespace LINQToAQL.Test
         public void ExactMatch0A()
         {
             IQueryable<FacebookUser> query = from user in new AqlQueryable<FacebookUser>(ConString)
-                where user.id == 8
-                select user;
+                                             where user.id == 8
+                                             select user;
             Assert.AreEqual("for $user in dataset FacebookUsers where ($user.id = 8) return $user;",
                 GetQueryString(query.Expression));
         }
@@ -34,8 +35,8 @@ namespace LINQToAQL.Test
         public void RangeScan0B()
         {
             IQueryable<FacebookUser> query = from user in new AqlQueryable<FacebookUser>(ConString)
-                where user.id >= 2 && user.id <= 4
-                select user;
+                                             where user.id >= 2 && user.id <= 4
+                                             select user;
             Assert.AreEqual(
                 "for $user in dataset FacebookUsers where (($user.id >= 2) and ($user.id <= 4)) return $user;",
                 GetQueryString(query.Expression));
@@ -58,11 +59,19 @@ namespace LINQToAQL.Test
         public void EquiJoin2A()
         {
             var query = from user in new AqlQueryable<FacebookUser>(ConString)
-                from message in new AqlQueryable<FacebookMessage>(ConString)
-                where message.AuthorId == user.id
-                select new {uname = user.name, message = message.Message};
+                        from message in new AqlQueryable<FacebookMessage>(ConString)
+                        where message.AuthorId == user.id
+                        select new { uname = user.name, message = message.Message };
             Assert.AreEqual(
                 "for $user in dataset FacebookUsers for $message in dataset FacebookMessages where ($message.author-id = $user.id) return { \"uname\": $user.name, \"message\": $message.message };",
+                GetQueryString(query.Expression));
+
+            query = from user in new AqlQueryable<FacebookUser>(ConString)
+                    join message in new AqlQueryable<FacebookMessage>(ConString)
+                        on user.id equals message.AuthorId
+                select new { uname = user.name, message = message.Message };
+            Assert.AreEqual(
+                "for $user in dataset FacebookUsers for $message in dataset FacebookMessages where ($user.id = $message.author-id) return { \"uname\": $user.name, \"message\": $message.message };",
                 GetQueryString(query.Expression));
         }
 
