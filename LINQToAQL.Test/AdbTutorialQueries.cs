@@ -25,8 +25,8 @@ namespace LINQToAQL.Test
         public void ExactMatch0A()
         {
             IQueryable<FacebookUser> query = from user in new AqlQueryable<FacebookUser>(ConString)
-                                             where user.id == 8
-                                             select user;
+                where user.id == 8
+                select user;
             Assert.AreEqual("for $user in dataset FacebookUsers where ($user.id = 8) return $user;",
                 GetQueryString(query.Expression));
         }
@@ -35,8 +35,8 @@ namespace LINQToAQL.Test
         public void RangeScan0B()
         {
             IQueryable<FacebookUser> query = from user in new AqlQueryable<FacebookUser>(ConString)
-                                             where user.id >= 2 && user.id <= 4
-                                             select user;
+                where user.id >= 2 && user.id <= 4
+                select user;
             Assert.AreEqual(
                 "for $user in dataset FacebookUsers where (($user.id >= 2) and ($user.id <= 4)) return $user;",
                 GetQueryString(query.Expression));
@@ -59,19 +59,34 @@ namespace LINQToAQL.Test
         public void EquiJoin2A()
         {
             var query = from user in new AqlQueryable<FacebookUser>(ConString)
-                        from message in new AqlQueryable<FacebookMessage>(ConString)
-                        where message.AuthorId == user.id
-                        select new { uname = user.name, message = message.Message };
+                from message in new AqlQueryable<FacebookMessage>(ConString)
+                where message.AuthorId == user.id
+                select new {uname = user.name, message = message.Message};
             Assert.AreEqual(
                 "for $user in dataset FacebookUsers for $message in dataset FacebookMessages where ($message.author-id = $user.id) return { \"uname\": $user.name, \"message\": $message.message };",
                 GetQueryString(query.Expression));
 
             query = from user in new AqlQueryable<FacebookUser>(ConString)
-                    join message in new AqlQueryable<FacebookMessage>(ConString)
-                        on user.id equals message.AuthorId
-                select new { uname = user.name, message = message.Message };
+                join message in new AqlQueryable<FacebookMessage>(ConString)
+                    on user.id equals message.AuthorId
+                select new {uname = user.name, message = message.Message};
             Assert.AreEqual(
                 "for $user in dataset FacebookUsers for $message in dataset FacebookMessages where ($user.id = $message.author-id) return { \"uname\": $user.name, \"message\": $message.message };",
+                GetQueryString(query.Expression));
+        }
+
+        [Test]
+        public void NestedOuterJoin3()
+        {
+            var fbUsers = new AqlQueryable<FacebookUser>(ConString);
+            var fbMessages = new AqlQueryable<FacebookMessage>(ConString);
+            var query = from user in fbUsers
+                select new
+                {
+                    uname = user.name,
+                    messages = (from message in fbMessages where message.AuthorId == user.id select message.Message)
+                };
+            Assert.AreEqual("for $user in dataset FacebookUsers return { \"uname\": $user.name, \"messages\": for $message in dataset FacebookMessages where ($message.author-id = $user.id) return $message.message };",
                 GetQueryString(query.Expression));
         }
 
@@ -80,7 +95,7 @@ namespace LINQToAQL.Test
             return AqlQueryModelVisitor.GenerateAqlQuery(QueryParser.CreateDefault().GetParsedQuery(exp));
         }
 
-        [Dataset("FacebookMessages", Open = false)]
+        [Dataset("FacebookMessages", Open = false), UsedImplicitly]
         private class FacebookMessage
         {
             [Field(Name = "message-id")]

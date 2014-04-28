@@ -9,10 +9,11 @@ namespace LINQToAQL.QueryBuilding
 {
     public class AqlQueryModelVisitor : QueryModelVisitorBase
     {
-        public static string GenerateAqlQuery(QueryModel queryModel)
+        public static string GenerateAqlQuery(QueryModel queryModel, bool isSubQuery = false) //better way to handle ; in subqueries?
         {
             var visitor = new AqlQueryModelVisitor();
             visitor.VisitQueryModel(queryModel);
+            visitor._queryBuilder.IsSubQuery = isSubQuery;
             return visitor.GetAqlQuery();
         }
 

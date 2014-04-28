@@ -150,6 +150,13 @@ namespace LINQToAQL.QueryBuilding
             return expression;
         }
 
+        protected override Expression VisitSubQueryExpression(SubQueryExpression expression)
+        {
+            //is this fragile?
+            _aqlExpression.Append(AqlQueryModelVisitor.GenerateAqlQuery(expression.QueryModel, true));
+            return expression;
+        }
+
         protected override Exception CreateUnhandledItemException<T>(T unhandledItem, string visitMethod)
         {
             return new NotSupportedException(string.Format("The expression '{0}' (type: {1}) is not supported.", FormatUnhandledItem(unhandledItem), typeof(T)));

@@ -22,6 +22,8 @@ namespace LINQToAQL.QueryBuilding
         private IList<string> WhereParts { get; set; }
         private IList<string> OrderByParts { get; set; }
 
+        public bool IsSubQuery { get; set; }
+
         public void AddFromPart(IQuerySource querySource)
         {
             string dataset = querySource.ItemType.GetAttributeValue((DatasetAttribute d) => d.Name);
@@ -49,7 +51,8 @@ namespace LINQToAQL.QueryBuilding
                 stringBuilder.AppendFormat(" where {0}", string.Join(" and ", WhereParts));
             if (OrderByParts.Count > 0)
                 stringBuilder.AppendFormat(" order by {0}", string.Join(", ", OrderByParts));
-            stringBuilder.AppendFormat(" return {0};", SelectPart);
+            stringBuilder.AppendFormat(" return {0}", SelectPart);
+            if (!IsSubQuery) stringBuilder.Append(";");
             return stringBuilder.ToString();
         }
     }
