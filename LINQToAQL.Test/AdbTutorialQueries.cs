@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Runtime.InteropServices.ComTypes;
 using LINQToAQL.QueryBuilding;
 using LINQToAQL.Test.Model;
 using NUnit.Framework;
@@ -17,7 +16,7 @@ namespace LINQToAQL.Test
     internal class AdbTutorialQueries
     {
         private const string ConString = "constring";
-        private TinySocial dv = new TinySocial(ConString);
+        private readonly TinySocial dv = new TinySocial(ConString);
 
         [Test]
         public void ExactMatch0A()
@@ -80,9 +79,25 @@ namespace LINQToAQL.Test
                 select new
                 {
                     uname = user.name,
-                    messages = (from message in dv.FacebookMessages where message.AuthorId == user.id select message.Message)
+                    messages =
+                        (from message in dv.FacebookMessages where message.AuthorId == user.id select message.Message)
                 };
-            Assert.AreEqual("for $user in dataset FacebookUsers return { \"uname\": $user.name, \"messages\": for $message in dataset FacebookMessages where ($message.author-id = $user.id) return $message.message };",
+            Assert.AreEqual(
+                "for $user in dataset FacebookUsers return { \"uname\": $user.name, \"messages\": (for $message in dataset FacebookMessages where ($message.author-id = $user.id) return $message.message) };",
+                GetQueryString(query.Expression));
+        }
+
+        //skipped queries 4 and 5 for now.
+
+        [Test]
+        public void ExistentialQuantification6()
+        {
+            IQueryable<FacebookUser> query = from fbu in dv.FacebookUsers
+                where (fbu.employment.Any(e => e.EndDate == null))//!e.EndDate.HasValue))
+                select fbu;
+            var test = GetQueryString(query.Expression);
+            Assert.AreEqual(
+                "for $fbu in dataset FacebookUsers where (some $e in $fbu.employment satisfies " + /*is-null*/ "($e.end-date = null)) return $fbu;",
                 GetQueryString(query.Expression));
         }
 

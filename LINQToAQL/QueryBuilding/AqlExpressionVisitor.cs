@@ -76,6 +76,9 @@ namespace LINQToAQL.QueryBuilding
                 case ExpressionType.LessThanOrEqual:
                     _aqlExpression.Append(" <= ");
                     break;
+                case ExpressionType.NotEqual:
+                    _aqlExpression.Append(" != ");
+                    break;
                 default:
                     base.VisitBinaryExpression(expression);
                     break;
@@ -99,8 +102,10 @@ namespace LINQToAQL.QueryBuilding
         {
             //var namedParameter = _parameters.AddParameter(expression.Value);
             //_aqlExpression.AppendFormat(":{0}", namedParameter.Name);
-            if (expression.Type.FullName == "System.DateTime") //should we check expression.Value instead?
+            if (expression.Type == typeof(DateTime))
                 _aqlExpression.AppendFormat("datetime('{0}')", ((DateTime)expression.Value).ToString("O"));
+            else if (expression.Value == null)
+                _aqlExpression.Append("null");
             else
                 _aqlExpression.Append(expression.Value);
             return expression;

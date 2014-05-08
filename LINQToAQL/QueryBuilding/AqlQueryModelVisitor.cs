@@ -40,7 +40,9 @@ namespace LINQToAQL.QueryBuilding
         public override void VisitResultOperator(ResultOperatorBase resultOperator, QueryModel queryModel, int index)
         {
             if (resultOperator is CountResultOperator)
-                _queryBuilder.SelectPart = string.Format("cast(count({0}) as int)", _queryBuilder.SelectPart);
+                _queryBuilder.SelectPart = string.Format("count({0})", _queryBuilder.SelectPart);
+            else if (resultOperator is AnyResultOperator) // does count > 1 work?
+                _queryBuilder.Existential = true;
             else
                 throw new NotSupportedException("Operator not supported!");
             base.VisitResultOperator(resultOperator, queryModel, index);
