@@ -60,6 +60,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="AdbTutorialQueries.cs" />
+    <Compile Include="AsterixDbIntegration.cs" />
     <Compile Include="Model\Employment.cs" />
     <Compile Include="Model\FacebookMessage.cs" />
     <Compile Include="Model\FacebookUser.cs" />

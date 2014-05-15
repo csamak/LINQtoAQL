@@ -9,9 +9,9 @@ namespace LINQToAQL.Test.Model
     [Dataset("FacebookUsers"), UsedImplicitly]
     internal class FacebookUser
     {
-        public FacebookUser(string conString)
+        public FacebookUser(Uri baseUri, string dataverse)
         {
-            employment = new AqlQueryable<Employment>(conString);
+            employment = new AqlQueryable<Employment>(baseUri, dataverse);
         }
 
         public int id { get; set; }

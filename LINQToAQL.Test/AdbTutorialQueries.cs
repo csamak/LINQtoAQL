@@ -15,8 +15,7 @@ namespace LINQToAQL.Test
     /// <remarks>We can do better than exact string matching to test by using ADB's actual query parser.</remarks>
     internal class AdbTutorialQueries
     {
-        private const string ConString = "constring";
-        private readonly TinySocial dv = new TinySocial(ConString);
+        private readonly TinySocial dv = new TinySocial(new Uri("http://33.0.0.2:19002"));
 
         [Test]
         public void ExactMatch0A()

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Linq.Expressions;
 using Remotion.Linq;
 using Remotion.Linq.Parsing.Structure;
@@ -8,8 +9,8 @@ namespace LINQToAQL
     /// <inheritdoc />
     public class AqlQueryable<T> : QueryableBase<T>
     {
-        public AqlQueryable(string conString) :
-            base(QueryParser.CreateDefault(), new AqlQueryExecutor(conString))
+        public AqlQueryable(Uri baseUri, string dataverse) :
+            base(QueryParser.CreateDefault(), new AqlQueryExecutor(baseUri, dataverse))
         {
         }
 

@@ -1,28 +1,29 @@
+using LINQToAQL.QueryBuilding;
+using Remotion.Linq;
 using System;
 using System.Collections.Generic;
-using Remotion.Linq;
 
 namespace LINQToAQL
 {
     internal class AqlQueryExecutor : IQueryExecutor
     {
-        private string _conString;
+        private readonly AqlQueryResultRetriever _resultRetriever;
 
-        public AqlQueryExecutor(string conString)
+        public AqlQueryExecutor(Uri baseUri, string dataverse)
         {
-            _conString = conString;
+            _resultRetriever = new AqlQueryResultRetriever(baseUri, dataverse);
         }
 
         /// <inheritdoc />
         public IEnumerable<T> ExecuteCollection<T>(QueryModel queryModel)
         {
-            throw new NotImplementedException();
+            return _resultRetriever.GetResults<T>(AqlQueryModelVisitor.GenerateAqlQuery(queryModel));
         }
 
         /// <inheritdoc />
         public T ExecuteScalar<T>(QueryModel queryModel)
         {
-            throw new NotImplementedException();
+            return _resultRetriever.GetScalar<T>(AqlQueryModelVisitor.GenerateAqlQuery(queryModel));
         }
 
         /// <inheritdoc />
