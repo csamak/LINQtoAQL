@@ -74,7 +74,6 @@ namespace LINQToAQL.QueryBuilding
                 stringBuilder.AppendFormat(" order by {0}", string.Join(", ", OrderByParts));
             if (!(Existential || Universal))
                 stringBuilder.AppendFormat(" return {0}", SelectPart);
-            if (!IsSubQuery) stringBuilder.Append(";"); //optional?
             if (IsSubQuery) stringBuilder.Append(')');
             return stringBuilder.ToString();
         }
