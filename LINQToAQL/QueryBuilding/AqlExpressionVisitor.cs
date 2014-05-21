@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -14,20 +13,20 @@ namespace LINQToAQL.QueryBuilding
 {
     public class AqlExpressionVisitor : ThrowingExpressionTreeVisitor
     {
-        public static string GetAqlExpression(Expression linqExpression)//, ParameterCollection parameters)
+        private readonly StringBuilder _aqlExpression = new StringBuilder();
+        //private readonly ParameterCollection _parameters;
+
+        private AqlExpressionVisitor() //ParameterCollection parameters)
+        {
+            //_parameters = parameters;
+        }
+
+        public static string GetAqlExpression(Expression linqExpression) //, ParameterCollection parameters)
         {
             //var visitor = new AqlExpressionVisitor(parameters);
             var visitor = new AqlExpressionVisitor();
             visitor.VisitExpression(linqExpression);
             return visitor.GetAqlExpression();
-        }
-
-        private readonly StringBuilder _aqlExpression = new StringBuilder();
-        //private readonly ParameterCollection _parameters;
-
-        private AqlExpressionVisitor()//ParameterCollection parameters)
-        {
-            //_parameters = parameters;
         }
 
         public string GetAqlExpression()
@@ -43,49 +42,43 @@ namespace LINQToAQL.QueryBuilding
 
         protected override Expression VisitBinaryExpression(BinaryExpression expression)
         {
-            _aqlExpression.Append("(");
-            VisitExpression(expression.Left); //nested expressions
-            switch (expression.NodeType)
+            //as keyword would reduce these to 1
+            if (expression.Right.NodeType == ExpressionType.Constant &&
+                ((ConstantExpression) expression.Right).Value == null)
+                VisitNullComparison(expression.NodeType, expression.Left);
+            else if (expression.Left.NodeType == ExpressionType.Constant &&
+                     ((ConstantExpression) expression.Left).Value == null)
+                VisitNullComparison(expression.NodeType, expression.Right);
+            else
+            {
+                _aqlExpression.Append("(");
+                VisitExpression(expression.Left); //nested expressions
+                string op;
+                if (Operators.Binary.TryGetValue(expression.NodeType, out op))
+                    _aqlExpression.Append(op);
+                else
+                    base.VisitBinaryExpression(expression);
+                VisitExpression(expression.Right);
+                _aqlExpression.Append(")");
+            }
+            return expression;
+        }
+
+        private void VisitNullComparison(ExpressionType comparisonType, Expression toCompare)
+        {
+            switch (comparisonType)
             {
                 case ExpressionType.Equal:
-                    _aqlExpression.Append(" = ");
-                    break;
-                case ExpressionType.AndAlso:
-                case ExpressionType.And:
-                    _aqlExpression.Append(" and ");
-                    break;
-                case ExpressionType.OrElse:
-                case ExpressionType.Or:
-                    _aqlExpression.Append(" or ");
-                    break;
-                case ExpressionType.Add:
-                    _aqlExpression.Append(" + ");
-                    break;
-                case ExpressionType.Subtract:
-                    _aqlExpression.Append(" - ");
-                    break;
-                case ExpressionType.Multiply:
-                    _aqlExpression.Append(" * ");
-                    break;
-                case ExpressionType.Divide:
-                    _aqlExpression.Append(" / ");
-                    break;
-                case ExpressionType.GreaterThanOrEqual:
-                    _aqlExpression.Append(" >= ");
-                    break;
-                case ExpressionType.LessThanOrEqual:
-                    _aqlExpression.Append(" <= ");
+                    _aqlExpression.Append("is-null(");
                     break;
                 case ExpressionType.NotEqual:
-                    _aqlExpression.Append(" != ");
+                    _aqlExpression.Append("not(is-null(");
                     break;
                 default:
-                    base.VisitBinaryExpression(expression);
-                    break;
+                    throw new NotImplementedException("Can only compare null using != or ==");
             }
-            VisitExpression(expression.Right);
-            _aqlExpression.Append(")");
-            return expression;
+            VisitExpression(toCompare);
+            _aqlExpression.Append(comparisonType == ExpressionType.Equal ? ")" : "))");
         }
 
         protected override Expression VisitMemberExpression(MemberExpression expression)
@@ -102,8 +95,8 @@ namespace LINQToAQL.QueryBuilding
         {
             //var namedParameter = _parameters.AddParameter(expression.Value);
             //_aqlExpression.AppendFormat(":{0}", namedParameter.Name);
-            if (expression.Type == typeof(DateTime))
-                _aqlExpression.AppendFormat("datetime('{0}')", ((DateTime)expression.Value).ToString("O"));
+            if (expression.Type == typeof (DateTime))
+                _aqlExpression.AppendFormat("datetime('{0}')", ((DateTime) expression.Value).ToString("O"));
             else if (expression.Value == null)
                 _aqlExpression.Append("null");
             else
@@ -113,7 +106,7 @@ namespace LINQToAQL.QueryBuilding
 
         protected override Expression VisitMethodCallExpression(MethodCallExpression expression)
         {
-            if (expression.Method.Equals(typeof(string).GetMethod("Contains")))
+            if (expression.Method.Equals(typeof (string).GetMethod("Contains")))
             {
                 _aqlExpression.Append("(");
                 VisitExpression(expression.Object);
@@ -145,12 +138,14 @@ namespace LINQToAQL.QueryBuilding
             {
                 //TODO: more intelligent converts?
                 VisitExpression(expression.Operand);
-                return expression;
             }
-            _aqlExpression.Append(expression.NodeType);
-            _aqlExpression.Append('(');
-            VisitExpression(expression.Operand);
-            _aqlExpression.Append(')');
+            else
+            {
+                _aqlExpression.Append(expression.NodeType.ToString().ToLower());
+                _aqlExpression.Append('(');
+                VisitExpression(expression.Operand);
+                _aqlExpression.Append(')');
+            }
 
             return expression;
         }
@@ -164,7 +159,9 @@ namespace LINQToAQL.QueryBuilding
 
         protected override Exception CreateUnhandledItemException<T>(T unhandledItem, string visitMethod)
         {
-            return new NotSupportedException(string.Format("The expression '{0}' (type: {1}) is not supported.", FormatUnhandledItem(unhandledItem), typeof(T)));
+            return
+                new NotSupportedException(string.Format("The expression '{0}' (type: {1}) is not supported.",
+                    FormatUnhandledItem(unhandledItem), typeof (T)));
         }
 
         private static string FormatUnhandledItem<T>(T unhandledItem)

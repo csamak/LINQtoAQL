@@ -58,6 +58,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueryBuilding\AqlExpressionVisitor.cs" />
     <Compile Include="QueryBuilding\AqlQueryModelVisitor.cs" />
+    <Compile Include="QueryBuilding\Operators.cs" />
     <Compile Include="QueryBuilding\ParameterCollection.cs" />
     <Compile Include="QueryBuilding\QueryBuilder.cs" />
   </ItemGroup>

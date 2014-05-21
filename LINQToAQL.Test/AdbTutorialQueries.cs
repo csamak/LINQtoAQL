@@ -92,10 +92,16 @@ namespace LINQToAQL.Test
         public void ExistentialQuantification6()
         {
             IQueryable<FacebookUser> query = from fbu in dv.FacebookUsers
-                where (fbu.employment.Any(e => e.EndDate == null))//!e.EndDate.HasValue))
+                where (fbu.employment.Any(e => e.EndDate == null))
                 select fbu;
             Assert.AreEqual(
-                "for $fbu in dataset FacebookUsers where (some $e in $fbu.employment satisfies " + /*is-null*/ "($e.end-date = null)) return $fbu",
+                "for $fbu in dataset FacebookUsers where (some $e in $fbu.employment satisfies is-null($e.end-date)) return $fbu",
+                GetQueryString(query.Expression));
+            query = from fbu in dv.FacebookUsers
+                where (fbu.employment.Any(e => !e.EndDate.HasValue))
+                select fbu;
+            Assert.AreEqual(
+                "for $fbu in dataset FacebookUsers where (some $e in $fbu.employment satisfies not(not(is-null($e.end-date)))) return $fbu",
                 GetQueryString(query.Expression));
         }
 
