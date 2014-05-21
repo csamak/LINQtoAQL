@@ -22,7 +22,7 @@ namespace LINQToAQL.QueryBuilding
 
         //public ParameterizedQuery GetAqlQuery()
         //{
-            //return new ParameterizedQuery(_queryBuilder.BuildAqlString(), _parameterAggregator.GetParameters());
+        //return new ParameterizedQuery(_queryBuilder.BuildAqlString(), _parameterAggregator.GetParameters());
         //}
         public string GetAqlQuery()
         {
@@ -43,6 +43,11 @@ namespace LINQToAQL.QueryBuilding
                 _queryBuilder.SelectPart = string.Format("count({0})", _queryBuilder.SelectPart);
             else if (resultOperator is AnyResultOperator) // does count > 1 work?
                 _queryBuilder.Existential = true;
+            else if (resultOperator is AllResultOperator)
+            {
+                _queryBuilder.Universal = true;
+                _queryBuilder.AddWherePart(GetAqlExpression(((AllResultOperator)resultOperator).Predicate));
+            }
             else
                 throw new NotSupportedException("Operator not supported!");
             base.VisitResultOperator(resultOperator, queryModel, index);
@@ -75,7 +80,7 @@ namespace LINQToAQL.QueryBuilding
         public override void VisitJoinClause(JoinClause joinClause, QueryModel queryModel, int index)
         {
             _queryBuilder.AddFromPart(joinClause); //cross join
-            _queryBuilder.AddWherePart( "({0} = {1})", GetAqlExpression(joinClause.OuterKeySelector), GetAqlExpression(joinClause.InnerKeySelector));
+            _queryBuilder.AddWherePart("({0} = {1})", GetAqlExpression(joinClause.OuterKeySelector), GetAqlExpression(joinClause.InnerKeySelector));
             base.VisitJoinClause(joinClause, queryModel, index);
         }
 

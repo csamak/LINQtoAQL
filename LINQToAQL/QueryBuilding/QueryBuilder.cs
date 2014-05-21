@@ -29,8 +29,7 @@ namespace LINQToAQL.QueryBuilding
 
         public void AddFromPart(FromClauseBase querySource)
         {
-            string dataset = null;
-            dataset = querySource.FromExpression.NodeType == ExpressionType.MemberAccess
+            string dataset = querySource.FromExpression.NodeType == ExpressionType.MemberAccess
                 ? AqlExpressionVisitor.GetAqlExpression(querySource.FromExpression as MemberExpression)
                 : querySource.ItemType.GetAttributeValue((DatasetAttribute d) => d.Name);
             FromParts.Add(Tuple.Create(querySource.ItemName, dataset ?? querySource.ItemType.Name));
@@ -62,8 +61,8 @@ namespace LINQToAQL.QueryBuilding
                 stringBuilder.Append(string.Join(" ",
                     FromParts.Select(f => string.Format("some ${0} in {1}", f.Item1, f.Item2))));
             else if (Universal)
-            {
-            }
+                stringBuilder.Append(string.Join(" ",
+                    FromParts.Select(f => string.Format("every ${0} in {1}", f.Item1, f.Item2))));
             else
                 stringBuilder.Append(string.Join(" ",
                     FromParts.Select(f => string.Format("for ${0} in dataset {1}", f.Item1, f.Item2))));

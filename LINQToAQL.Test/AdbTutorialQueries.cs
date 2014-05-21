@@ -105,6 +105,23 @@ namespace LINQToAQL.Test
                 GetQueryString(query.Expression));
         }
 
+        [Test]
+        public void UniversalQuantification7()
+        {
+            var query = from fbu in dv.FacebookUsers
+                where (fbu.employment.All(e => e.EndDate != null))
+                select fbu;
+            Assert.AreEqual(
+                "for $fbu in dataset FacebookUsers where (every $e in $fbu.employment satisfies not(is-null($e.end-date))) return $fbu",
+                GetQueryString(query.Expression));
+            query = from fbu in dv.FacebookUsers
+                where (fbu.employment.All(e => e.EndDate.HasValue))
+                select fbu;
+            Assert.AreEqual(
+                "for $fbu in dataset FacebookUsers where (every $e in $fbu.employment satisfies not(is-null($e.end-date))) return $fbu",
+                GetQueryString(query.Expression));
+        }
+
         private static string GetQueryString(Expression exp)
         {
             return AqlQueryModelVisitor.GenerateAqlQuery(QueryParser.CreateDefault().GetParsedQuery(exp));
