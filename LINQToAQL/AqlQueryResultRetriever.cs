@@ -14,7 +14,7 @@ namespace LINQToAQL
     {
         readonly HttpClient _client = new HttpClient(new HttpClientHandler { AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate });
         private readonly string _dataverse;
-        private JsonSerializer _serializer = new JsonSerializer();
+        private readonly JsonSerializer _serializer = new JsonSerializer();
 
         public AqlQueryResultRetriever(Uri baseAddress, string dataverse)
         {

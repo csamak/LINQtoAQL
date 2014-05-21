@@ -40,7 +40,7 @@ namespace LINQToAQL.QueryBuilding
         public override void VisitResultOperator(ResultOperatorBase resultOperator, QueryModel queryModel, int index)
         {
             if (resultOperator is CountResultOperator)
-                _queryBuilder.SelectPart = string.Format("count({0})", _queryBuilder.SelectPart);
+                _queryBuilder.ResultPattern = "count({0})";
             else if (resultOperator is AnyResultOperator) // does count > 1 work?
                 _queryBuilder.Existential = true;
             else if (resultOperator is AllResultOperator)

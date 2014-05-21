@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Runtime;
 using LINQToAQL.QueryBuilding;
 using LINQToAQL.Test.Model;
 using NUnit.Framework;
+using Remotion.Linq.Clauses.ResultOperators;
 using Remotion.Linq.Parsing.Structure;
+using Remotion.Linq.Parsing.Structure.IntermediateModel;
 
 namespace LINQToAQL.Test
 {
@@ -120,6 +123,13 @@ namespace LINQToAQL.Test
             Assert.AreEqual(
                 "for $fbu in dataset FacebookUsers where (every $e in $fbu.employment satisfies not(is-null($e.end-date))) return $fbu",
                 GetQueryString(query.Expression));
+        }
+
+        [Test]
+        public void SimpleAggregation8()
+        {
+            Expression<Func<int>> query = (() => dv.FacebookUsers.Count());
+            Assert.AreEqual("count(for $generated_1 in dataset FacebookUsers return $generated_1)", GetQueryString(query.Body));
         }
 
         private static string GetQueryString(Expression exp)
