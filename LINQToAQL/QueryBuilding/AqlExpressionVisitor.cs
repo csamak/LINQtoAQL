@@ -15,10 +15,12 @@ namespace LINQToAQL.QueryBuilding
     {
         private readonly StringBuilder _aqlExpression = new StringBuilder();
         //private readonly ParameterCollection _parameters;
+        private readonly AqlFunctionVisitor _functionVisitor;
 
         private AqlExpressionVisitor() //ParameterCollection parameters)
         {
             //_parameters = parameters;
+            _functionVisitor = new AqlFunctionVisitor(_aqlExpression, this);
         }
 
         public static string GetAqlExpression(Expression linqExpression) //, ParameterCollection parameters)
@@ -106,23 +108,7 @@ namespace LINQToAQL.QueryBuilding
 
         protected override Expression VisitMethodCallExpression(MethodCallExpression expression)
         {
-            if (expression.Method.Equals(typeof (string).GetMethod("Contains")))
-            {
-                _aqlExpression.Append("(");
-                VisitExpression(expression.Object);
-                _aqlExpression.Append(" like '%'+");
-                VisitExpression(expression.Arguments[0]);
-                _aqlExpression.Append("+'%')");
-            }
-            else if (typeof (Math).GetMethods().Where(m => m.Name == "Abs").Contains(expression.Method))
-            {
-                _aqlExpression.Append("numeric-abs(");
-                VisitExpression(expression.Arguments[0]);
-                _aqlExpression.Append(")");
-            }
-            else
-                return base.VisitMethodCallExpression(expression);
-            return expression;
+            return !_functionVisitor.VisitAqlFunction(expression) ? base.VisitMethodCallExpression(expression) : expression;
         }
 
         protected override Expression VisitNewExpression(NewExpression expression)

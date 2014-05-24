@@ -18,11 +18,27 @@ namespace LINQToAQL.Test.QueryBuilding.AqlFunctions
         [Test]
         public void NumericAbs()
         {
-            //numeric-abs
             var query = dv.FacebookUsers.Where(u => Math.Abs(u.id) > 32);
             Assert.AreEqual("for $u in dataset FacebookUsers where (numeric-abs($u.id) > 32) return $u",
                 GetQueryString(query.Expression));
         }
+
+        [Test]
+        public void NumericCeiling()
+        {
+            var query = dv.FacebookUsers.Where(u => Math.Ceiling((decimal)u.id) > 32);
+            Assert.AreEqual("for $u in dataset FacebookUsers where (numeric-ceiling($u.id) > 32) return $u",
+                GetQueryString(query.Expression));
+        }
+
+        [Test]
+        public void NumericFloor()
+        {
+            var query = dv.FacebookUsers.Where(u => Math.Floor((decimal)u.id) > 32);
+            Assert.AreEqual("for $u in dataset FacebookUsers where (numeric-floor($u.id) > 32) return $u",
+                GetQueryString(query.Expression));
+        }
+
         private static string GetQueryString(Expression exp)
         {
             return AqlQueryModelVisitor.GenerateAqlQuery(QueryParser.CreateDefault().GetParsedQuery(exp));
