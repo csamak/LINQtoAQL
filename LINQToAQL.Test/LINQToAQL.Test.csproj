@@ -59,14 +59,18 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="AdbTutorialQueries.cs" />
+    <Compile Include="QueryBuilding\AdbTutorialQueries.cs" />
     <Compile Include="AsterixDbIntegration.cs" />
     <Compile Include="Model\Employment.cs" />
     <Compile Include="Model\FacebookMessage.cs" />
     <Compile Include="Model\FacebookUser.cs" />
+    <Compile Include="Model\TweetMessage.cs" />
+    <Compile Include="Model\TwitterUser.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Model\TinySocial.cs" />
+    <Compile Include="QueryBuilding\AqlFunctions\Numeric.cs" />
+    <Compile Include="QueryBuilding\Grouping.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

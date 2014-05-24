@@ -18,6 +18,8 @@ namespace LINQToAQL.QueryBuilding
                 {ExpressionType.Subtract, " - "},
                 {ExpressionType.Multiply, " * "},
                 {ExpressionType.Divide, " / "},
+                {ExpressionType.GreaterThan, " > "},
+                {ExpressionType.LessThan, " < "},
                 {ExpressionType.GreaterThanOrEqual, " >= "},
                 {ExpressionType.LessThanOrEqual, " <= "},
                 {ExpressionType.NotEqual, " != "},

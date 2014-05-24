@@ -113,9 +113,16 @@ namespace LINQToAQL.QueryBuilding
                 _aqlExpression.Append(" like '%'+");
                 VisitExpression(expression.Arguments[0]);
                 _aqlExpression.Append("+'%')");
-                return expression;
             }
-            return base.VisitMethodCallExpression(expression);
+            else if (typeof (Math).GetMethods().Where(m => m.Name == "Abs").Contains(expression.Method))
+            {
+                _aqlExpression.Append("numeric-abs(");
+                VisitExpression(expression.Arguments[0]);
+                _aqlExpression.Append(")");
+            }
+            else
+                return base.VisitMethodCallExpression(expression);
+            return expression;
         }
 
         protected override Expression VisitNewExpression(NewExpression expression)

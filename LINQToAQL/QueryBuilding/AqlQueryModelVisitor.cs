@@ -48,6 +48,7 @@ namespace LINQToAQL.QueryBuilding
                 _queryBuilder.Universal = true;
                 _queryBuilder.AddWherePart(GetAqlExpression(((AllResultOperator)resultOperator).Predicate));
             }
+            //else if (resultOperator is GroupResultOperator)
             else
                 throw new NotSupportedException("Operator not supported!");
             base.VisitResultOperator(resultOperator, queryModel, index);
@@ -55,6 +56,7 @@ namespace LINQToAQL.QueryBuilding
 
         public override void VisitMainFromClause(MainFromClause fromClause, QueryModel queryModel)
         {
+            //var test = GetAqlExpression(fromClause.FromExpression);
             _queryBuilder.AddFromPart(fromClause);
             base.VisitMainFromClause(fromClause, queryModel);
         }

@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Runtime;
 using LINQToAQL.QueryBuilding;
 using LINQToAQL.Test.Model;
 using NUnit.Framework;
-using Remotion.Linq.Clauses.ResultOperators;
 using Remotion.Linq.Parsing.Structure;
-using Remotion.Linq.Parsing.Structure.IntermediateModel;
 
-namespace LINQToAQL.Test
+namespace LINQToAQL.Test.QueryBuilding
 {
     /// <summary>
     ///     Tests queries used in the "AsterixDB 101: An ADM and AQL Primer" tutorial, found at
@@ -130,6 +127,15 @@ namespace LINQToAQL.Test
         {
             Expression<Func<int>> query = (() => dv.FacebookUsers.Count());
             Assert.AreEqual("count(for $generated_1 in dataset FacebookUsers return $generated_1)", GetQueryString(query.Body));
+        }
+
+        [Test]
+        public void GroupingAndAggregation9A()
+        {
+            var query =
+                dv.TweetMessages.GroupBy(t => t.user.ScreenName)
+                    .Select(uid => new {user = uid.Key, count = uid.Count()});
+            Assert.AreEqual("for $t in dataset TweetMessages group by $uid := $t.user.screen-name with $t return { \"user\": $uid, \"count\": count($t) }", GetQueryString(query.Expression));
         }
 
         private static string GetQueryString(Expression exp)
