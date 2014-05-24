@@ -39,6 +39,17 @@ namespace LINQToAQL.Test.QueryBuilding.AqlFunctions
                 GetQueryString(query.Expression));
         }
 
+        [Test]
+        public void NumericRoundHalfToEven()
+        {
+            var query = dv.FacebookUsers.Where(u => Math.Round((decimal)u.id, MidpointRounding.ToEven) > 32);
+            Assert.AreEqual(GetQueryString(query.Expression),
+                GetQueryString(
+                    dv.FacebookUsers.Where(u => Math.Round((decimal) u.id) > 32).Expression));
+            Assert.AreEqual("for $u in dataset FacebookUsers where (numeric-round-half-to-even($u.id) > 32) return $u",
+                GetQueryString(query.Expression));
+        }
+
         private static string GetQueryString(Expression exp)
         {
             return AqlQueryModelVisitor.GenerateAqlQuery(QueryParser.CreateDefault().GetParsedQuery(exp));
