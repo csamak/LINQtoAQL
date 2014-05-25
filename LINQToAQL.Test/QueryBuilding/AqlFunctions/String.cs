@@ -27,7 +27,12 @@ namespace LINQToAQL.Test.QueryBuilding.AqlFunctions
         }
 
         [Test]
-
+        public void CodepointToString()
+        {
+            var query = dv.FacebookUsers.Select(u => new string(u.name.ToCharArray()));
+            Assert.AreEqual("for $u in dataset FacebookUsers return codepoint-to-string(string-to-codepoint($u.name))",
+                GetQueryString(query.Expression));
+        }
 
         private static string GetQueryString(Expression exp)
         {

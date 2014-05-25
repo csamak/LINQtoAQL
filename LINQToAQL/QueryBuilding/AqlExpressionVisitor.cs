@@ -46,10 +46,10 @@ namespace LINQToAQL.QueryBuilding
         {
             //as keyword would reduce these to 1
             if (expression.Right.NodeType == ExpressionType.Constant &&
-                ((ConstantExpression) expression.Right).Value == null)
+                ((ConstantExpression)expression.Right).Value == null)
                 VisitNullComparison(expression.NodeType, expression.Left);
             else if (expression.Left.NodeType == ExpressionType.Constant &&
-                     ((ConstantExpression) expression.Left).Value == null)
+                     ((ConstantExpression)expression.Left).Value == null)
                 VisitNullComparison(expression.NodeType, expression.Right);
             else
             {
@@ -97,8 +97,8 @@ namespace LINQToAQL.QueryBuilding
         {
             //var namedParameter = _parameters.AddParameter(expression.Value);
             //_aqlExpression.AppendFormat(":{0}", namedParameter.Name);
-            if (expression.Type == typeof (DateTime))
-                _aqlExpression.AppendFormat("datetime('{0}')", ((DateTime) expression.Value).ToString("O"));
+            if (expression.Type == typeof(DateTime))
+                _aqlExpression.AppendFormat("datetime('{0}')", ((DateTime)expression.Value).ToString("O"));
             else if (expression.Value == null)
                 _aqlExpression.Append("null");
             else
@@ -108,20 +108,32 @@ namespace LINQToAQL.QueryBuilding
 
         protected override Expression VisitMethodCallExpression(MethodCallExpression expression)
         {
-            return !_functionVisitor.VisitAqlFunction(expression) ? base.VisitMethodCallExpression(expression) : expression;
+            return !_functionVisitor.VisitAqlFunction(expression)
+                ? base.VisitMethodCallExpression(expression)
+                : expression;
         }
 
         protected override Expression VisitNewExpression(NewExpression expression)
         {
-            _aqlExpression.Append("{");
-            for (int i = 0; i < expression.Arguments.Count; i++)
+            if (expression.Type == typeof(string))
             {
-                _aqlExpression.AppendFormat(" \"{0}\": ", expression.Members[i].Name);
-                VisitExpression(expression.Arguments[i]);
-                if (i < expression.Arguments.Count - 1) //better way?
-                    _aqlExpression.Append(',');
+                _aqlExpression.Append("codepoint-to-string(");
+                VisitExpression(expression.Arguments[0]);
+                _aqlExpression.Append(")");
             }
-            _aqlExpression.Append(" }");
+            else
+            {
+                _aqlExpression.Append("{");
+                for (int i = 0; i < expression.Arguments.Count; i++)
+                {
+                    //what if it isn't named?
+                    _aqlExpression.AppendFormat(" \"{0}\": ", expression.Members[i].Name);
+                    VisitExpression(expression.Arguments[i]);
+                    if (i < expression.Arguments.Count - 1) //better way?
+                        _aqlExpression.Append(',');
+                }
+                _aqlExpression.Append(" }");
+            }
             return expression;
         }
 
@@ -154,7 +166,7 @@ namespace LINQToAQL.QueryBuilding
         {
             return
                 new NotSupportedException(string.Format("The expression '{0}' (type: {1}) is not supported.",
-                    FormatUnhandledItem(unhandledItem), typeof (T)));
+                    FormatUnhandledItem(unhandledItem), typeof(T)));
         }
 
         private static string FormatUnhandledItem<T>(T unhandledItem)
