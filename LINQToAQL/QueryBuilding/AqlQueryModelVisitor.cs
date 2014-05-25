@@ -48,6 +48,8 @@ namespace LINQToAQL.QueryBuilding
                 _queryBuilder.Universal = true;
                 _queryBuilder.AddWherePart(GetAqlExpression(((AllResultOperator)resultOperator).Predicate));
             }
+            else if (resultOperator is AverageResultOperator)
+                _queryBuilder.ResultPattern = "avg({0})";
             //else if (resultOperator is GroupResultOperator)
             else
                 throw new NotSupportedException("Operator not supported!");

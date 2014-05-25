@@ -69,9 +69,11 @@
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Model\TinySocial.cs" />
+    <Compile Include="QueryBuilding\AqlFunctions\Aggregate.cs" />
     <Compile Include="QueryBuilding\AqlFunctions\String.cs" />
     <Compile Include="QueryBuilding\AqlFunctions\Numeric.cs" />
     <Compile Include="QueryBuilding\Grouping.cs" />
+    <Compile Include="QueryBuilding\QueryBuildingBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -8,10 +8,8 @@ using Remotion.Linq.Parsing.Structure;
 
 namespace LINQToAQL.Test.QueryBuilding.AqlFunctions
 {
-    internal class String
+    internal class String : QueryBuildingBase
     {
-        private readonly TinySocial dv = new TinySocial(new Uri("http://33.0.0.2:19002"));
-
         [Test]
         public void StringToCodepoint()
         {
@@ -64,6 +62,11 @@ namespace LINQToAQL.Test.QueryBuilding.AqlFunctions
 
         //TODO: string-concat
 
+        private class StringJoinClass
+        {
+            public string[] Messages { get; set; }
+        }
+
         [Test]
         public void StringJoin()
         {
@@ -104,14 +107,8 @@ namespace LINQToAQL.Test.QueryBuilding.AqlFunctions
                 GetQueryString(query.Expression));
         }
 
-        private static string GetQueryString(Expression exp)
-        {
-            return AqlQueryModelVisitor.GenerateAqlQuery(QueryParser.CreateDefault().GetParsedQuery(exp));
-        }
+        //TODO: substring-before
+        //TODO: substring-after
 
-        private class StringJoinClass
-        {
-            public string[] Messages { get; set; }
-        }
     }
 }

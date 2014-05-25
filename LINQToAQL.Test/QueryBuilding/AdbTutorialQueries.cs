@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
-using LINQToAQL.QueryBuilding;
 using LINQToAQL.Test.Model;
 using NUnit.Framework;
-using Remotion.Linq.Parsing.Structure;
 
 namespace LINQToAQL.Test.QueryBuilding
 {
@@ -13,10 +11,8 @@ namespace LINQToAQL.Test.QueryBuilding
     ///     http://asterixdb.ics.uci.edu/documentation/aql/primer.html.
     /// </summary>
     /// <remarks>We can do better than exact string matching to test by using ADB's actual query parser.</remarks>
-    internal class AdbTutorialQueries
+    internal class AdbTutorialQueries : QueryBuildingBase
     {
-        private readonly TinySocial dv = new TinySocial(new Uri("http://33.0.0.2:19002"));
-
         [Test]
         public void ExactMatch0A()
         {
@@ -108,7 +104,7 @@ namespace LINQToAQL.Test.QueryBuilding
         [Test]
         public void UniversalQuantification7()
         {
-            var query = from fbu in dv.FacebookUsers
+            IQueryable<FacebookUser> query = from fbu in dv.FacebookUsers
                 where (fbu.employment.All(e => e.EndDate != null))
                 select fbu;
             Assert.AreEqual(
@@ -126,7 +122,8 @@ namespace LINQToAQL.Test.QueryBuilding
         public void SimpleAggregation8()
         {
             Expression<Func<int>> query = (() => dv.FacebookUsers.Count());
-            Assert.AreEqual("count(for $generated_1 in dataset FacebookUsers return $generated_1)", GetQueryString(query.Body));
+            Assert.AreEqual("count(for $generated_1 in dataset FacebookUsers return $generated_1)",
+                GetQueryString(query.Body));
         }
 
         [Test]
@@ -135,12 +132,9 @@ namespace LINQToAQL.Test.QueryBuilding
             var query =
                 dv.TweetMessages.GroupBy(t => t.user.ScreenName)
                     .Select(uid => new {user = uid.Key, count = uid.Count()});
-            Assert.AreEqual("for $t in dataset TweetMessages group by $uid := $t.user.screen-name with $t return { \"user\": $uid, \"count\": count($t) }", GetQueryString(query.Expression));
-        }
-
-        private static string GetQueryString(Expression exp)
-        {
-            return AqlQueryModelVisitor.GenerateAqlQuery(QueryParser.CreateDefault().GetParsedQuery(exp));
+            Assert.AreEqual(
+                "for $t in dataset TweetMessages group by $uid := $t.user.screen-name with $t return { \"user\": $uid, \"count\": count($t) }",
+                GetQueryString(query.Expression));
         }
     }
 }
