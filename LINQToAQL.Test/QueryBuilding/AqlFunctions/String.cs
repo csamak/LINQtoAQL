@@ -52,6 +52,29 @@ namespace LINQToAQL.Test.QueryBuilding.AqlFunctions
                 ,GetQueryString(query.Expression));
         }
 
+        [Test]
+        public void EndsWith()
+        {
+            var query = dv.FacebookMessages.Where(i => i.Message.EndsWith(":)")).Select(i => i.Message);
+            Assert.AreEqual("for $i in dataset FacebookMessages where ends-with($i.message, \":)\") return $i.message",
+                GetQueryString(query.Expression));
+        }
+
+        //string-concat
+
+        private class StringJoinClass
+        {
+            public string[] Messages { get; set; }
+        }
+
+        [Test]
+        public void StringJoin()
+        {
+            var query = new AqlQueryable<StringJoinClass>(null, "").Select(m => string.Join(",", m.Messages));
+            Assert.AreEqual("for $m in dataset StringJoinClass return string-join($m.Messages, \",\")",
+                GetQueryString(query.Expression));
+        }
+
         private static string GetQueryString(Expression exp)
         {
             return AqlQueryModelVisitor.GenerateAqlQuery(QueryParser.CreateDefault().GetParsedQuery(exp));

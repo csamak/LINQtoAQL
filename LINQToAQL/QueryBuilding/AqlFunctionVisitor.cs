@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -41,9 +43,7 @@ namespace LINQToAQL.QueryBuilding
                 SingleArg("numeric-round-half-to-even", expression.Arguments[0]);
             else if (expression.Method.Equals(typeof (string).GetMethod("ToCharArray", new Type[0])))
                 SingleArg("string-to-codepoint", expression.Object);
-                //shouldn't use name comparison?
-            else if (expression.Method.IsSpecialName && expression.Method.Name == "get_Chars" &&
-                     expression.Method.DeclaringType.FullName == "System.String")
+            else if (expression.Method.Equals(typeof(string).GetMethod("get_Chars")))
             {
                 _aqlExpression.Append("string-to-codepoint(");
                 _visitor.VisitExpression(expression.Object);
@@ -55,6 +55,15 @@ namespace LINQToAQL.QueryBuilding
                 ManyArgs("contains", expression.Object, expression.Arguments[0]);
             else if (expression.Method.Equals(typeof(string).GetMethod("StartsWith", new[] {typeof(string)})))
                 ManyArgs("starts-with", expression.Object, expression.Arguments[0]);
+            else if (expression.Method.Equals(typeof(string).GetMethod("EndsWith", new[] {typeof(string)})))
+                ManyArgs("ends-with", expression.Object, expression.Arguments[0]);
+            else if (
+                new[]
+                {
+                    typeof (string).GetMethod("Join", new[] {typeof (string), typeof(IEnumerable<string>)}),
+                    typeof (string).GetMethod("Join", new[] {typeof (string), typeof(string[])})
+                }.Contains(expression.Method))
+                ManyArgs("string-join", expression.Arguments[1], expression.Arguments[0]);
             else
                 return false;
             return true;
