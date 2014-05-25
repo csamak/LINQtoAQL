@@ -45,12 +45,14 @@ namespace LINQToAQL.QueryBuilding
             else if (expression.Method.IsSpecialName && expression.Method.Name == "get_Chars" &&
                      expression.Method.DeclaringType.FullName == "System.String")
             {
-                _aqlExpression.Append("string-to-codepoint");
+                _aqlExpression.Append("string-to-codepoint(");
                 _visitor.VisitExpression(expression.Object);
                 _aqlExpression.Append(")[");
                 _aqlExpression.Append(expression.Arguments[0]);
                 _aqlExpression.Append("]");
             }
+            else if (expression.Method.Equals(typeof(string).GetMethod("Contains")))
+                ManyArgs("contains", expression.Object, expression.Arguments[0]);
             else
                 return false;
             return true;
@@ -58,9 +60,20 @@ namespace LINQToAQL.QueryBuilding
 
         protected void SingleArg(string name, Expression argument)
         {
-            _aqlExpression.Append(name);
-            _aqlExpression.Append("(");
+            _aqlExpression.AppendFormat("{0}(", name);
             _visitor.VisitExpression(argument);
+            _aqlExpression.Append(")");
+        }
+
+        protected void ManyArgs(string name, params Expression[] args)
+        {
+            _aqlExpression.AppendFormat("{0}(", name);
+            _visitor.VisitExpression(args[0]);
+            foreach (var arg in args.Skip(1))
+            {
+                _aqlExpression.Append(", ");
+                _visitor.VisitExpression(arg);
+            }
             _aqlExpression.Append(")");
         }
     }

@@ -99,6 +99,8 @@ namespace LINQToAQL.QueryBuilding
             //_aqlExpression.AppendFormat(":{0}", namedParameter.Name);
             if (expression.Type == typeof(DateTime))
                 _aqlExpression.AppendFormat("datetime('{0}')", ((DateTime)expression.Value).ToString("O"));
+            else if (expression.Type == typeof(string))
+                _aqlExpression.AppendFormat("\"{0}\"", expression.Value);
             else if (expression.Value == null)
                 _aqlExpression.Append("null");
             else
