@@ -93,6 +93,17 @@ namespace LINQToAQL.Test.QueryBuilding.AqlFunctions
                 GetQueryString(query.Expression));
         }
 
+        [Test]
+        public void Substring()
+        {
+            var query = dv.FacebookMessages.Select(i => i.Message.Substring(50));
+            Assert.AreEqual("for $i in dataset FacebookMessages return substring($i.message, 50)",
+                GetQueryString(query.Expression));
+            query = dv.FacebookMessages.Select(i => i.Message.Substring(50, 10));
+            Assert.AreEqual("for $i in dataset FacebookMessages return substring($i.message, 50, 10)",
+                GetQueryString(query.Expression));
+        }
+
         private static string GetQueryString(Expression exp)
         {
             return AqlQueryModelVisitor.GenerateAqlQuery(QueryParser.CreateDefault().GetParsedQuery(exp));
