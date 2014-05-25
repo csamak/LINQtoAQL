@@ -22,7 +22,7 @@ namespace LINQToAQL.Test.QueryBuilding.AqlFunctions
         [Test]
         public void Avg()
         {
-            Expression<Func<double>> query = (() => dv.FacebookMessages.Select(m => m.Id).Average());
+            Expression<Func<double>> query = (() => dv.FacebookMessages.Average(m => m.Id));
             Assert.AreEqual("avg(for $m in dataset FacebookMessages return $m.message-id)",
                 GetQueryString(query.Body));
         }
@@ -30,8 +30,24 @@ namespace LINQToAQL.Test.QueryBuilding.AqlFunctions
         [Test]
         public void Sum()
         {
-            Expression<Func<int>> query = (() => dv.TwitterUsers.Select(i => i.friends_count).Sum());
+            Expression<Func<int>> query = (() => dv.TwitterUsers.Sum(i => i.friends_count));
             Assert.AreEqual("sum(for $i in dataset TwitterUsers return $i.friends_count)",
+                GetQueryString(query.Body));
+        }
+
+        [Test]
+        public void Max()
+        {
+            Expression<Func<int>> query = (() => dv.TwitterUsers.Max(i => i.friends_count));
+            Assert.AreEqual("max(for $i in dataset TwitterUsers return $i.friends_count)",
+                GetQueryString(query.Body));
+        }
+
+        [Test]
+        public void Min()
+        {
+            Expression<Func<int>> query = (() => dv.TwitterUsers.Min(i => i.friends_count));
+            Assert.AreEqual("min(for $i in dataset TwitterUsers return $i.friends_count)",
                 GetQueryString(query.Body));
         }
     }
