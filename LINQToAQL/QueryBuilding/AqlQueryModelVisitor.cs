@@ -50,6 +50,8 @@ namespace LINQToAQL.QueryBuilding
             }
             else if (resultOperator is AverageResultOperator)
                 _queryBuilder.ResultPattern = "avg({0})";
+            else if (resultOperator is SumResultOperator)
+                _queryBuilder.ResultPattern = "sum({0})";
             //else if (resultOperator is GroupResultOperator)
             else
                 throw new NotSupportedException("Operator not supported!");

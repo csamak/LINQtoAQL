@@ -26,5 +26,13 @@ namespace LINQToAQL.Test.QueryBuilding.AqlFunctions
             Assert.AreEqual("avg(for $m in dataset FacebookMessages return $m.message-id)",
                 GetQueryString(query.Body));
         }
+
+        [Test]
+        public void Sum()
+        {
+            Expression<Func<int>> query = (() => dv.TwitterUsers.Select(i => i.friends_count).Sum());
+            Assert.AreEqual("sum(for $i in dataset TwitterUsers return $i.friends_count)",
+                GetQueryString(query.Body));
+        }
     }
 }
