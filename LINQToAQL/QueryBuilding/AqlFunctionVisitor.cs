@@ -64,6 +64,8 @@ namespace LINQToAQL.QueryBuilding
                     typeof (string).GetMethod("Join", new[] {typeof (string), typeof(string[])})
                 }.Contains(expression.Method))
                 ManyArgs("string-join", expression.Arguments[1], expression.Arguments[0]);
+            else if (expression.Method.Equals(typeof(string).GetMethod("ToLower", new Type[0])))
+                SingleArg("lowercase", expression.Object);
             else
                 return false;
             return true;

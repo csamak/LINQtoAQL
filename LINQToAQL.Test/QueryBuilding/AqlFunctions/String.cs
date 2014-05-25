@@ -75,6 +75,14 @@ namespace LINQToAQL.Test.QueryBuilding.AqlFunctions
                 GetQueryString(query.Expression));
         }
 
+        [Test]
+        public void ToLower()
+        {
+            var query = dv.FacebookUsers.Select(u => u.name.ToLower());
+            Assert.AreEqual("for $u in dataset FacebookUsers return lowercase($u.name)",
+                GetQueryString(query.Expression));
+        }
+
         private static string GetQueryString(Expression exp)
         {
             return AqlQueryModelVisitor.GenerateAqlQuery(QueryParser.CreateDefault().GetParsedQuery(exp));
