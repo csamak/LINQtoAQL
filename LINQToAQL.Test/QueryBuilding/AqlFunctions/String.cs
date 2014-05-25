@@ -42,6 +42,16 @@ namespace LINQToAQL.Test.QueryBuilding.AqlFunctions
                 GetQueryString(query.Expression));
         }
 
+        //AQL like
+
+        [Test]
+        public void StartsWith()
+        {
+            var query = dv.FacebookMessages.Where(i => i.Message.StartsWith(" like")).Select(i => i.Message);
+            Assert.AreEqual("for $i in dataset FacebookMessages where starts-with($i.message, \" like\") return $i.message"
+                ,GetQueryString(query.Expression));
+        }
+
         private static string GetQueryString(Expression exp)
         {
             return AqlQueryModelVisitor.GenerateAqlQuery(QueryParser.CreateDefault().GetParsedQuery(exp));

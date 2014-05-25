@@ -53,6 +53,8 @@ namespace LINQToAQL.QueryBuilding
             }
             else if (expression.Method.Equals(typeof(string).GetMethod("Contains")))
                 ManyArgs("contains", expression.Object, expression.Arguments[0]);
+            else if (expression.Method.Equals(typeof(string).GetMethod("StartsWith", new[] {typeof(string)})))
+                ManyArgs("starts-with", expression.Object, expression.Arguments[0]);
             else
                 return false;
             return true;
