@@ -85,11 +85,20 @@ namespace LINQToAQL.QueryBuilding
 
         protected override Expression VisitMemberExpression(MemberExpression expression)
         {
-            VisitExpression(expression.Expression);
-            string field = expression.Expression.Type.GetMember(expression.Member.Name)
-                .First(m => m.MemberType == MemberTypes.Property || m.MemberType == MemberTypes.Field)
-                .GetAttributeValue((FieldAttribute f) => f.Name);
-            _aqlExpression.AppendFormat(".{0}", field ?? expression.Member.Name);
+            if (expression.Member.Name == "Length" && expression.Member.DeclaringType == typeof (string))
+            {
+                _aqlExpression.Append("string-length(");
+                VisitExpression(expression.Expression);
+                _aqlExpression.Append(")");
+            }
+            else
+            {
+                VisitExpression(expression.Expression);
+                string field = expression.Expression.Type.GetMember(expression.Member.Name)
+                    .First(m => m.MemberType == MemberTypes.Property || m.MemberType == MemberTypes.Field)
+                    .GetAttributeValue((FieldAttribute f) => f.Name);
+                _aqlExpression.AppendFormat(".{0}", field ?? expression.Member.Name);
+            }
             return expression;
         }
 

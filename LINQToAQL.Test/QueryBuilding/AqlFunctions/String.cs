@@ -42,35 +42,33 @@ namespace LINQToAQL.Test.QueryBuilding.AqlFunctions
                 GetQueryString(query.Expression));
         }
 
-        //AQL like
+        //TODO: AQL like
 
         [Test]
         public void StartsWith()
         {
-            var query = dv.FacebookMessages.Where(i => i.Message.StartsWith(" like")).Select(i => i.Message);
-            Assert.AreEqual("for $i in dataset FacebookMessages where starts-with($i.message, \" like\") return $i.message"
-                ,GetQueryString(query.Expression));
+            IQueryable<string> query =
+                dv.FacebookMessages.Where(i => i.Message.StartsWith(" like")).Select(i => i.Message);
+            Assert.AreEqual(
+                "for $i in dataset FacebookMessages where starts-with($i.message, \" like\") return $i.message"
+                , GetQueryString(query.Expression));
         }
 
         [Test]
         public void EndsWith()
         {
-            var query = dv.FacebookMessages.Where(i => i.Message.EndsWith(":)")).Select(i => i.Message);
+            IQueryable<string> query = dv.FacebookMessages.Where(i => i.Message.EndsWith(":)")).Select(i => i.Message);
             Assert.AreEqual("for $i in dataset FacebookMessages where ends-with($i.message, \":)\") return $i.message",
                 GetQueryString(query.Expression));
         }
 
-        //string-concat
-
-        private class StringJoinClass
-        {
-            public string[] Messages { get; set; }
-        }
+        //TODO: string-concat
 
         [Test]
         public void StringJoin()
         {
-            var query = new AqlQueryable<StringJoinClass>(null, "").Select(m => string.Join(",", m.Messages));
+            IQueryable<string> query =
+                new AqlQueryable<StringJoinClass>(null, "").Select(m => string.Join(",", m.Messages));
             Assert.AreEqual("for $m in dataset StringJoinClass return string-join($m.Messages, \",\")",
                 GetQueryString(query.Expression));
         }
@@ -78,14 +76,31 @@ namespace LINQToAQL.Test.QueryBuilding.AqlFunctions
         [Test]
         public void ToLower()
         {
-            var query = dv.FacebookUsers.Select(u => u.name.ToLower());
+            IQueryable<string> query = dv.FacebookUsers.Select(u => u.name.ToLower());
             Assert.AreEqual("for $u in dataset FacebookUsers return lowercase($u.name)",
+                GetQueryString(query.Expression));
+        }
+
+        //TODO: matches
+        //TODO: replace
+
+        [Test]
+        public void StringLength()
+        {
+            var query = dv.FacebookMessages.Select(i => new {mid = i.Id, mlen = i.Message.Length});
+            Assert.AreEqual(
+                "for $i in dataset FacebookMessages return { \"mid\": $i.message-id, \"mlen\": string-length($i.message) }",
                 GetQueryString(query.Expression));
         }
 
         private static string GetQueryString(Expression exp)
         {
             return AqlQueryModelVisitor.GenerateAqlQuery(QueryParser.CreateDefault().GetParsedQuery(exp));
+        }
+
+        private class StringJoinClass
+        {
+            public string[] Messages { get; set; }
         }
     }
 }
