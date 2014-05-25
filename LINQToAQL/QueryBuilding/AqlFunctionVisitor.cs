@@ -39,6 +39,18 @@ namespace LINQToAQL.QueryBuilding
                     expression.Method) &&
                  ((ConstantExpression) expression.Arguments[1]).Value.Equals(MidpointRounding.ToEven)))
                 SingleArg("numeric-round-half-to-even", expression.Arguments[0]);
+            else if (expression.Method.Equals(typeof (string).GetMethod("ToCharArray", new Type[0])))
+                SingleArg("string-to-codepoint", expression.Object);
+                //shouldn't use name comparison?
+            else if (expression.Method.IsSpecialName && expression.Method.Name == "get_Chars" &&
+                     expression.Method.DeclaringType.FullName == "System.String")
+            {
+                _aqlExpression.Append("string-to-codepoint");
+                _visitor.VisitExpression(expression.Object);
+                _aqlExpression.Append(")[");
+                _aqlExpression.Append(expression.Arguments[0]);
+                _aqlExpression.Append("]");
+            }
             else
                 return false;
             return true;
