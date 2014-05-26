@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using LINQToAQL.Similarity;
 
 namespace LINQToAQL.QueryBuilding
 {
@@ -70,6 +71,17 @@ namespace LINQToAQL.QueryBuilding
                 AqlFunction("substring", expression.Object, expression.Arguments[0]);
             else if (expression.Method.Equals(typeof (string).GetMethod("Substring", new[] {typeof (int), typeof (int)})))
                 AqlFunction("substring", expression.Object, expression.Arguments[0], expression.Arguments[1]);
+            else if (
+                typeof (EditDistanceExtensions).GetMethods()
+                    .Where(m => m.Name == "EditDistance")
+                    .Contains(expression.Method))
+                AqlFunction("edit-distance", expression.Arguments[0], expression.Arguments[1]);
+            else if (
+                typeof (EditDistanceExtensions).GetMethods()
+                    .Where(m => m.Name == "EditDistanceCheck")
+                    .Contains(expression.Method))
+                AqlFunction("edit-distance-check", expression.Arguments[0], expression.Arguments[1],
+                    expression.Arguments[2]);
             else
                 return false;
             return true;

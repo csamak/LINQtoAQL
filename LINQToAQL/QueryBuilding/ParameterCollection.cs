@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace LINQToAQL.QueryBuilding
 {
-    public class ParameterizedQuery
+    internal class ParameterizedQuery
     {
         public ParameterizedQuery(string statement, Parameter[] namedParameters)
         {
@@ -19,7 +19,7 @@ namespace LINQToAQL.QueryBuilding
         //}
     }
 
-    public class Parameter
+    internal class Parameter
     {
         public Parameter(string name, object value)
         {
@@ -31,7 +31,7 @@ namespace LINQToAQL.QueryBuilding
         public object Value { get; set; }
     }
 
-    public class ParameterCollection
+    internal class ParameterCollection
     {
         private readonly IList<Parameter> _parameters = new List<Parameter>();
 

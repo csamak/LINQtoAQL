@@ -39,6 +39,7 @@ namespace LINQToAQL.QueryBuilding
 
         public override void VisitResultOperator(ResultOperatorBase resultOperator, QueryModel queryModel, int index)
         {
+            //TODO: make sure we shouldn't be using sql-sum, etc.
             if (resultOperator is CountResultOperator)
                 _queryBuilder.ResultPattern = "count({0})";
             else if (resultOperator is AnyResultOperator) // does count > 1 work?

@@ -9,7 +9,7 @@ using Remotion.Linq.Clauses;
 
 namespace LINQToAQL.QueryBuilding
 {
-    public class QueryBuilder
+    internal class QueryBuilder
     {
         public QueryBuilder()
         {

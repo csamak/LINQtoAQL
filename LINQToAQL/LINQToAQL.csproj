@@ -52,6 +52,7 @@
     <Compile Include="AqlQueryable.cs" />
     <Compile Include="AqlQueryExecutor.cs" />
     <Compile Include="AqlQueryResultRetriever.cs" />
+    <Compile Include="AsterixRemoteOnlyException.cs" />
     <Compile Include="DataAnnotations\DatasetAttribute.cs" />
     <Compile Include="DataAnnotations\Field.cs" />
     <Compile Include="Extensions\AttributeExtensions.cs" />
@@ -62,10 +63,12 @@
     <Compile Include="QueryBuilding\Operators.cs" />
     <Compile Include="QueryBuilding\ParameterCollection.cs" />
     <Compile Include="QueryBuilding\QueryBuilder.cs" />
+    <Compile Include="Similarity\EditDistanceExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

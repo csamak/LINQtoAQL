@@ -11,7 +11,7 @@ using Remotion.Linq.Parsing;
 
 namespace LINQToAQL.QueryBuilding
 {
-    public class AqlExpressionVisitor : ThrowingExpressionTreeVisitor
+    internal class AqlExpressionVisitor : ThrowingExpressionTreeVisitor
     {
         private readonly StringBuilder _aqlExpression = new StringBuilder();
         //private readonly ParameterCollection _parameters;
