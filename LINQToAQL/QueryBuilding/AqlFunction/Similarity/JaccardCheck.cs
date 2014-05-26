@@ -17,7 +17,7 @@ namespace LINQToAQL.QueryBuilding.AqlFunction.Similarity
                    typeof (JaccardExtensions).GetMethod("JaccardCheck");
         }
 
-        public override void VisitAqlFunction(MethodCallExpression expression)
+        public override void Visit(MethodCallExpression expression)
         {
             AqlFunction("similarity-jaccard-check", expression.Arguments[0], expression.Arguments[1],
                 expression.Arguments[2]);

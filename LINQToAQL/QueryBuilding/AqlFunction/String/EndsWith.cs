@@ -18,7 +18,7 @@ namespace LINQToAQL.QueryBuilding.AqlFunction.String
             return expression.Method.Equals(typeof (string).GetMethod("EndsWith", new[] {typeof (string)}));
         }
 
-        public override void VisitAqlFunction(MethodCallExpression expression)
+        public override void Visit(MethodCallExpression expression)
         {
             AqlFunction("ends-with", expression.Object, expression.Arguments[0]);
         }

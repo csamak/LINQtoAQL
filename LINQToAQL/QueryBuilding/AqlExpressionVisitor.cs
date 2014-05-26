@@ -145,7 +145,7 @@ namespace LINQToAQL.QueryBuilding
                 AqlFunctionVisitor function in
                     _aqlFunctions.Functions.Where(function => function.IsVisitable(expression)))
             {
-                function.VisitAqlFunction(expression);
+                function.Visit(expression);
                 return expression;
             }
             return base.VisitMethodCallExpression(expression);

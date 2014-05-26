@@ -15,7 +15,7 @@ namespace LINQToAQL.QueryBuilding.AqlFunction.String
             return expression.Method.Equals(typeof (string).GetMethod("ToCharArray", new Type[0]));
         }
 
-        public override void VisitAqlFunction(MethodCallExpression expression)
+        public override void Visit(MethodCallExpression expression)
         {
             AqlFunction("string-to-codepoint", expression.Object);
         }

@@ -29,7 +29,7 @@ namespace LINQToAQL.QueryBuilding.AqlFunction.Numeric
                  ((ConstantExpression) expression.Arguments[1]).Value.Equals(MidpointRounding.ToEven));
         }
 
-        public override void VisitAqlFunction(MethodCallExpression expression)
+        public override void Visit(MethodCallExpression expression)
         {
             AqlFunction("numeric-round-half-to-even", expression.Arguments[0]);
         }

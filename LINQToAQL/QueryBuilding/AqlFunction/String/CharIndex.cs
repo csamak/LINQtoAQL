@@ -18,7 +18,7 @@ namespace LINQToAQL.QueryBuilding.AqlFunction.String
             return expression.Method.Equals(typeof (string).GetMethod("get_Chars"));
         }
 
-        public override void VisitAqlFunction(MethodCallExpression expression)
+        public override void Visit(MethodCallExpression expression)
         {
             AqlExpression.Append("string-to-codepoint(");
             Visitor.VisitExpression(expression.Object);

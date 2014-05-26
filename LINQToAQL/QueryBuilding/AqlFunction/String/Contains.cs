@@ -14,7 +14,7 @@ namespace LINQToAQL.QueryBuilding.AqlFunction.String
             return expression.Method.Equals(typeof (string).GetMethod("Contains"));
         }
 
-        public override void VisitAqlFunction(MethodCallExpression expression)
+        public override void Visit(MethodCallExpression expression)
         {
             AqlFunction("contains", expression.Object, expression.Arguments[0]);
         }

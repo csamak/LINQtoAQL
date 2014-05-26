@@ -21,7 +21,7 @@ namespace LINQToAQL.QueryBuilding.AqlFunction.Similarity
                 typeof (EditDistanceExtensions).GetMethod("EditDistanceCheck");
         }
 
-        public override void VisitAqlFunction(MethodCallExpression expression)
+        public override void Visit(MethodCallExpression expression)
         {
             AqlFunction("edit-distance-check", expression.Arguments[0], expression.Arguments[1], expression.Arguments[2]);
         }

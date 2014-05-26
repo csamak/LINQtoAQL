@@ -16,7 +16,7 @@ namespace LINQToAQL.QueryBuilding.AqlFunction.Numeric
             return typeof (Math).GetMethods().Where(m => m.Name == "Ceiling").Contains(expression.Method);
         }
 
-        public override void VisitAqlFunction(MethodCallExpression expression)
+        public override void Visit(MethodCallExpression expression)
         {
             AqlFunction("numeric-ceiling", expression.Arguments[0]);
         }

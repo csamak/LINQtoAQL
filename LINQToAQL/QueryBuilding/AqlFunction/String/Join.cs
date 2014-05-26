@@ -22,7 +22,7 @@ namespace LINQToAQL.QueryBuilding.AqlFunction.String
                     expression.Method);
         }
 
-        public override void VisitAqlFunction(MethodCallExpression expression)
+        public override void Visit(MethodCallExpression expression)
         {
             AqlFunction("string-join", expression.Arguments[1], expression.Arguments[0]);
         }

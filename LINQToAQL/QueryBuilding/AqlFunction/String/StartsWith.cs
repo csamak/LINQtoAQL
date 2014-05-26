@@ -14,7 +14,7 @@ namespace LINQToAQL.QueryBuilding.AqlFunction.String
             return expression.Method.Equals(typeof (string).GetMethod("StartsWith", new[] {typeof (string)}));
         }
 
-        public override void VisitAqlFunction(MethodCallExpression expression)
+        public override void Visit(MethodCallExpression expression)
         {
             AqlFunction("starts-with", expression.Object, expression.Arguments[0]);
         }

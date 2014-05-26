@@ -16,7 +16,7 @@ namespace LINQToAQL.QueryBuilding.AqlFunction
         }
 
         public abstract bool IsVisitable(MethodCallExpression expression);
-        public abstract void VisitAqlFunction(MethodCallExpression expression);
+        public abstract void Visit(MethodCallExpression expression);
 
         protected void AqlFunction(string name, params Expression[] args)
         {
