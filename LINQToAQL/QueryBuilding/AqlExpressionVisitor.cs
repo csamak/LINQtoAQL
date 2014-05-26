@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Text;
 using LINQToAQL.DataAnnotations;
 using LINQToAQL.Extensions;
+using LINQToAQL.QueryBuilding.AqlFunction;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Linq.Parsing;
@@ -15,12 +16,12 @@ namespace LINQToAQL.QueryBuilding
     {
         private readonly StringBuilder _aqlExpression = new StringBuilder();
         //private readonly ParameterCollection _parameters;
-        private readonly AqlFunctionVisitor _functionVisitor;
+        private readonly AqlFunctions _aqlFunctions;
 
         private AqlExpressionVisitor() //ParameterCollection parameters)
         {
             //_parameters = parameters;
-            _functionVisitor = new AqlFunctionVisitor(_aqlExpression, this);
+            _aqlFunctions = new AqlFunctions(_aqlExpression, this);
         }
 
         public static string GetAqlExpression(Expression linqExpression) //, ParameterCollection parameters)
@@ -119,9 +120,12 @@ namespace LINQToAQL.QueryBuilding
 
         protected override Expression VisitMethodCallExpression(MethodCallExpression expression)
         {
-            return !_functionVisitor.VisitAqlFunction(expression)
-                ? base.VisitMethodCallExpression(expression)
-                : expression;
+            foreach (var function in _aqlFunctions.Functions.Where(function => function.IsVisitable(expression)))
+            {
+                function.VisitAqlFunction(expression);
+                return expression;
+            }
+            return base.VisitMethodCallExpression(expression);
         }
 
         protected override Expression VisitNewExpression(NewExpression expression)
