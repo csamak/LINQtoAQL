@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace LINQToAQL.QueryBuilding.AqlFunction.String
 {
-    class CharIndex : AqlFunctionVisitor
+    internal class CharIndex : AqlFunctionVisitor
     {
         public CharIndex(StringBuilder aqlExpression, AqlExpressionVisitor visitor) : base(aqlExpression, visitor)
         {

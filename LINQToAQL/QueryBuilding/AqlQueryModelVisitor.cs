@@ -7,26 +7,34 @@ using Remotion.Linq.Clauses.ResultOperators;
 
 namespace LINQToAQL.QueryBuilding
 {
-    public class AqlQueryModelVisitor : QueryModelVisitorBase
+    /// <summary>
+    ///     Generates AQL query strings
+    /// </summary>
+    public static class AqlQueryGenerator //exists to allow public method below
     {
-        public static string GenerateAqlQuery(QueryModel queryModel, bool isSubQuery = false) //better way to handle ; in subqueries?
+        /// <summary>
+        ///     Generates AQL query strings given a <see cref="QueryModel" />.
+        /// </summary>
+        /// <param name="queryModel">The query model that represents the query to generate</param>
+        /// <param name="isSubQuery">Whether the query is a subquery</param>
+        /// <returns>The AQL query string</returns>
+        public static string GenerateAqlQuery(QueryModel queryModel, bool isSubQuery = false)
+            //better way to handle ; in subqueries?
         {
             var visitor = new AqlQueryModelVisitor();
             visitor.VisitQueryModel(queryModel);
-            visitor._queryBuilder.IsSubQuery = isSubQuery;
+            visitor.QueryBuilder.IsSubQuery = isSubQuery;
             return visitor.GetAqlQuery();
         }
+    }
 
-        private readonly QueryBuilder _queryBuilder = new QueryBuilder();
-        //private readonly ParameterAggregator _parameterAggregator = new ParameterAggregator();
+    internal class AqlQueryModelVisitor : QueryModelVisitorBase
+    {
+        internal readonly QueryBuilder QueryBuilder = new QueryBuilder();
 
-        //public ParameterizedQuery GetAqlQuery()
-        //{
-        //return new ParameterizedQuery(_queryBuilder.BuildAqlString(), _parameterAggregator.GetParameters());
-        //}
         public string GetAqlQuery()
         {
-            return _queryBuilder.BuildAqlString();
+            return QueryBuilder.BuildAqlString();
         }
 
         public override void VisitQueryModel(QueryModel queryModel)
@@ -41,23 +49,23 @@ namespace LINQToAQL.QueryBuilding
         {
             //TODO: make sure we shouldn't be using sql-sum, etc.
             if (resultOperator is CountResultOperator)
-                _queryBuilder.ResultPattern = "count({0})";
+                QueryBuilder.ResultPattern = "count({0})";
             else if (resultOperator is AnyResultOperator) // does count > 1 work?
-                _queryBuilder.Existential = true;
+                QueryBuilder.Existential = true;
             else if (resultOperator is AllResultOperator)
             {
-                _queryBuilder.Universal = true;
-                _queryBuilder.AddWherePart(GetAqlExpression(((AllResultOperator)resultOperator).Predicate));
+                QueryBuilder.Universal = true;
+                QueryBuilder.AddWherePart(GetAqlExpression(((AllResultOperator) resultOperator).Predicate));
             }
             else if (resultOperator is AverageResultOperator)
-                _queryBuilder.ResultPattern = "avg({0})";
+                QueryBuilder.ResultPattern = "avg({0})";
             else if (resultOperator is SumResultOperator)
-                _queryBuilder.ResultPattern = "sum({0})";
+                QueryBuilder.ResultPattern = "sum({0})";
             else if (resultOperator is MaxResultOperator)
-                _queryBuilder.ResultPattern = "max({0})";
+                QueryBuilder.ResultPattern = "max({0})";
             else if (resultOperator is MinResultOperator)
-                _queryBuilder.ResultPattern = "min({0})";
-            //else if (resultOperator is GroupResultOperator)
+                QueryBuilder.ResultPattern = "min({0})";
+                //else if (resultOperator is GroupResultOperator)
             else
                 throw new NotSupportedException("Operator not supported!");
             base.VisitResultOperator(resultOperator, queryModel, index);
@@ -66,38 +74,39 @@ namespace LINQToAQL.QueryBuilding
         public override void VisitMainFromClause(MainFromClause fromClause, QueryModel queryModel)
         {
             //var test = GetAqlExpression(fromClause.FromExpression);
-            _queryBuilder.AddFromPart(fromClause);
+            QueryBuilder.AddFromPart(fromClause);
             base.VisitMainFromClause(fromClause, queryModel);
         }
 
         public override void VisitSelectClause(SelectClause selectClause, QueryModel queryModel)
         {
-            _queryBuilder.SelectPart = GetAqlExpression(selectClause.Selector);
+            QueryBuilder.SelectPart = GetAqlExpression(selectClause.Selector);
             base.VisitSelectClause(selectClause, queryModel);
         }
 
         public override void VisitWhereClause(WhereClause whereClause, QueryModel queryModel, int index)
         {
-            _queryBuilder.AddWherePart(GetAqlExpression(whereClause.Predicate));
+            QueryBuilder.AddWherePart(GetAqlExpression(whereClause.Predicate));
             base.VisitWhereClause(whereClause, queryModel, index);
         }
 
         public override void VisitOrderByClause(OrderByClause orderByClause, QueryModel queryModel, int index)
         {
-            _queryBuilder.AddOrderByPart(orderByClause.Orderings.Select(o => GetAqlExpression(o.Expression)));
+            QueryBuilder.AddOrderByPart(orderByClause.Orderings.Select(o => GetAqlExpression(o.Expression)));
             base.VisitOrderByClause(orderByClause, queryModel, index);
         }
 
         public override void VisitJoinClause(JoinClause joinClause, QueryModel queryModel, int index)
         {
-            _queryBuilder.AddFromPart(joinClause); //cross join
-            _queryBuilder.AddWherePart("({0} = {1})", GetAqlExpression(joinClause.OuterKeySelector), GetAqlExpression(joinClause.InnerKeySelector));
+            QueryBuilder.AddFromPart(joinClause); //cross join
+            QueryBuilder.AddWherePart("({0} = {1})", GetAqlExpression(joinClause.OuterKeySelector),
+                GetAqlExpression(joinClause.InnerKeySelector));
             base.VisitJoinClause(joinClause, queryModel, index);
         }
 
         public override void VisitAdditionalFromClause(AdditionalFromClause fromClause, QueryModel queryModel, int index)
         {
-            _queryBuilder.AddFromPart(fromClause);
+            QueryBuilder.AddFromPart(fromClause);
             base.VisitAdditionalFromClause(fromClause, queryModel, index);
         }
 

@@ -2,7 +2,7 @@
 
 namespace LINQToAQL.Test.Model
 {
-    [Dataset("TwitterUsers", Open = true)]
+    [Dataset(Name = "TwitterUsers", Open = true)]
     internal class TwitterUser
     {
         [Field(Name = "screen-name")]

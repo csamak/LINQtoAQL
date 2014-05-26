@@ -6,7 +6,7 @@ using LINQToAQL.Test.Annotations;
 
 namespace LINQToAQL.Test.Model
 {
-    [Dataset("FacebookUsers"), UsedImplicitly]
+    [Dataset(Name = "FacebookUsers"), UsedImplicitly]
     internal class FacebookUser
     {
         public FacebookUser(Uri baseUri, string dataverse)

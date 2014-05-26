@@ -4,7 +4,7 @@ using LINQToAQL.Test.Annotations;
 
 namespace LINQToAQL.Test.Model
 {
-    [Dataset("FacebookMessages", Open = false), UsedImplicitly]
+    [Dataset(Name = "FacebookMessages", Open = false), UsedImplicitly]
     internal class FacebookMessage
     {
         [Field(Name = "message-id")]

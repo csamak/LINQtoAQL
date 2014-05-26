@@ -22,6 +22,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <DocumentationFile>bin\Debug\LINQToAQL.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -54,7 +56,7 @@
     <Compile Include="AqlQueryResultRetriever.cs" />
     <Compile Include="AsterixRemoteOnlyException.cs" />
     <Compile Include="DataAnnotations\DatasetAttribute.cs" />
-    <Compile Include="DataAnnotations\Field.cs" />
+    <Compile Include="DataAnnotations\FieldAttribute.cs" />
     <Compile Include="Extensions\AttributeExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueryBuilding\AqlExpressionVisitor.cs" />

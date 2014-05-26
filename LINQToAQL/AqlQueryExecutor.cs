@@ -17,13 +17,13 @@ namespace LINQToAQL
         /// <inheritdoc />
         public IEnumerable<T> ExecuteCollection<T>(QueryModel queryModel)
         {
-            return _resultRetriever.GetResults<T>(AqlQueryModelVisitor.GenerateAqlQuery(queryModel));
+            return _resultRetriever.GetResults<T>(AqlQueryGenerator.GenerateAqlQuery(queryModel));
         }
 
         /// <inheritdoc />
         public T ExecuteScalar<T>(QueryModel queryModel)
         {
-            return _resultRetriever.GetScalar<T>(AqlQueryModelVisitor.GenerateAqlQuery(queryModel));
+            return _resultRetriever.GetScalar<T>(AqlQueryGenerator.GenerateAqlQuery(queryModel));
         }
 
         /// <inheritdoc />

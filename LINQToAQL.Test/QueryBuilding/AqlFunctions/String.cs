@@ -1,10 +1,5 @@
-﻿using System;
-using System.Linq;
-using System.Linq.Expressions;
-using LINQToAQL.QueryBuilding;
-using LINQToAQL.Test.Model;
+﻿using System.Linq;
 using NUnit.Framework;
-using Remotion.Linq.Parsing.Structure;
 
 namespace LINQToAQL.Test.QueryBuilding.AqlFunctions
 {
@@ -62,11 +57,6 @@ namespace LINQToAQL.Test.QueryBuilding.AqlFunctions
 
         //TODO: string-concat
 
-        private class StringJoinClass
-        {
-            public string[] Messages { get; set; }
-        }
-
         [Test]
         public void StringJoin()
         {
@@ -99,7 +89,7 @@ namespace LINQToAQL.Test.QueryBuilding.AqlFunctions
         [Test]
         public void Substring()
         {
-            var query = dv.FacebookMessages.Select(i => i.Message.Substring(50));
+            IQueryable<string> query = dv.FacebookMessages.Select(i => i.Message.Substring(50));
             Assert.AreEqual("for $i in dataset FacebookMessages return substring($i.message, 50)",
                 GetQueryString(query.Expression));
             query = dv.FacebookMessages.Select(i => i.Message.Substring(50, 10));
@@ -107,8 +97,12 @@ namespace LINQToAQL.Test.QueryBuilding.AqlFunctions
                 GetQueryString(query.Expression));
         }
 
+        private class StringJoinClass
+        {
+            public string[] Messages { get; set; }
+        }
+
         //TODO: substring-before
         //TODO: substring-after
-
     }
 }

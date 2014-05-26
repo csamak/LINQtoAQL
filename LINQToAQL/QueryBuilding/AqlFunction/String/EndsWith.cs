@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace LINQToAQL.QueryBuilding.AqlFunction.String
 {
-    class EndsWith : AqlFunctionVisitor
+    internal class EndsWith : AqlFunctionVisitor
     {
         public EndsWith(StringBuilder aqlExpression, AqlExpressionVisitor visitor) : base(aqlExpression, visitor)
         {

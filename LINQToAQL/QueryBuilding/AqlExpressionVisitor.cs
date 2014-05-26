@@ -196,7 +196,7 @@ namespace LINQToAQL.QueryBuilding
         protected override Expression VisitSubQueryExpression(SubQueryExpression expression)
         {
             //is this fragile?
-            _aqlExpression.Append(AqlQueryModelVisitor.GenerateAqlQuery(expression.QueryModel, true));
+            _aqlExpression.Append(AqlQueryGenerator.GenerateAqlQuery(expression.QueryModel, true));
             return expression;
         }
 

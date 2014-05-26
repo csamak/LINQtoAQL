@@ -4,7 +4,7 @@ using System.Text;
 
 namespace LINQToAQL.QueryBuilding.AqlFunction
 {
-    abstract class AqlFunctionVisitor
+    internal abstract class AqlFunctionVisitor
     {
         protected readonly StringBuilder AqlExpression;
         protected AqlExpressionVisitor Visitor;
