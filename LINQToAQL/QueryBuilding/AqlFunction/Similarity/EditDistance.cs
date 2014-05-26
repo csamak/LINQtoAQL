@@ -13,9 +13,14 @@ namespace LINQToAQL.QueryBuilding.AqlFunction.Similarity
 
         public override bool IsVisitable(MethodCallExpression expression)
         {
-            return typeof (EditDistanceExtensions).GetMethods()
-                .Where(m => m.Name == "EditDistance")
-                .Contains(expression.Method);
+            return
+                typeof (EditDistanceExtensions).GetMethods()
+                    .Where(m => m.Name == "EditDistance")
+                    .Contains(expression.Method) ||
+                (expression.Method.IsGenericMethod &&
+                 typeof (EditDistanceExtensions).GetMethods()
+                     .Where(m => m.Name == "EditDistance")
+                     .Contains(expression.Method.GetGenericMethodDefinition()));
         }
 
         public override void VisitAqlFunction(MethodCallExpression expression)

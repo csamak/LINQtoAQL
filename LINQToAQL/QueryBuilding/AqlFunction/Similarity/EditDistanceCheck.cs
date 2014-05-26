@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using System.Text;
 using LINQToAQL.Similarity;
 
@@ -15,9 +14,11 @@ namespace LINQToAQL.QueryBuilding.AqlFunction.Similarity
         public override bool IsVisitable(MethodCallExpression expression)
         {
             return
-                typeof (EditDistanceExtensions).GetMethods()
-                    .Where(m => m.Name == "EditDistanceCheck")
-                    .Contains(expression.Method);
+                typeof (EditDistanceExtensions).GetMethod("EditDistanceCheck",
+                    new[] {typeof (string), typeof (string), typeof (int)}).Equals(expression.Method) ||
+                expression.Method.Name == "EditDistanceCheck" && expression.Method.IsGenericMethod &&
+                expression.Method.GetGenericMethodDefinition() ==
+                typeof (EditDistanceExtensions).GetMethod("EditDistanceCheck");
         }
 
         public override void VisitAqlFunction(MethodCallExpression expression)

@@ -13,7 +13,7 @@ namespace LINQToAQL.Test.QueryBuilding.AqlFunctions
         {
             IQueryable<FacebookUser> query = dv.FacebookUsers.Where(u => u.FriendIds.EditDistance(new[] {1, 5, 9}) <= 2);
             Assert.AreEqual(
-                "for $u in dataset FacebookUsers where (edit-distance($u.friend-ids, [1, 5, 9]) <= 2) return $u",
+                "for $u in dataset FacebookUsers where (edit-distance($u.friend-ids, [1,5,9]) <= 2) return $u",
                 GetQueryString(query.Expression));
             OnlyRemote(() => "".EditDistance("other"));
         }
@@ -33,19 +33,20 @@ namespace LINQToAQL.Test.QueryBuilding.AqlFunctions
         {
             IQueryable<FacebookUser> query = dv.FacebookUsers.Where(u => u.FriendIds.Jaccard(new[] {1, 5, 9}) >= 0.6);
             Assert.AreEqual(
-                "for $u in dataset FacebookUsers where (similarity-jaccard($u.friend-ids, [1, 5, 9]) >= 0.6) return $u",
+                "for $u in dataset FacebookUsers where (similarity-jaccard($u.friend-ids, [1,5,9]) >= 0.6) return $u",
                 GetQueryString(query.Expression));
         }
 
         [Test]
         public void JaccardCheck()
         {
+            //note how let is handled
             IQueryable<object> query = from u in dv.FacebookUsers
                 let sim = u.FriendIds.JaccardCheck(new[] {1, 5, 9}, 0.6)
                 where (bool) sim[0]
                 select sim[1];
             Assert.AreEqual(
-                "for $u in dataset FacebookUserslet $sim := similarity-jaccard-check($u.friend-ids, [1,5,9], 0.6f) where $sim[0] return $sim[1]",
+                "for $u in dataset FacebookUsers where similarity-jaccard-check($u.friend-ids, [1,5,9], 0.6)[0] return similarity-jaccard-check($u.friend-ids, [1,5,9], 0.6)[1]",
                 GetQueryString(query.Expression));
         }
 
