@@ -5,7 +5,7 @@ using LINQToAQL.Similarity;
 
 namespace LINQToAQL.QueryBuilding.AqlFunction.Similarity
 {
-    internal class EditDistance : AqlFunctionVisitorBase
+    internal class EditDistance : AqlFunctionVisitor
     {
         public EditDistance(StringBuilder aqlExpression, AqlExpressionVisitor visitor) : base(aqlExpression, visitor)
         {

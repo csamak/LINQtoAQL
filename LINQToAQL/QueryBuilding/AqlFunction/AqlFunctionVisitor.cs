@@ -4,12 +4,12 @@ using System.Text;
 
 namespace LINQToAQL.QueryBuilding.AqlFunction
 {
-    abstract class AqlFunctionVisitorBase
+    abstract class AqlFunctionVisitor
     {
         protected readonly StringBuilder AqlExpression;
         protected AqlExpressionVisitor Visitor;
 
-        protected AqlFunctionVisitorBase(StringBuilder aqlExpression, AqlExpressionVisitor visitor)
+        protected AqlFunctionVisitor(StringBuilder aqlExpression, AqlExpressionVisitor visitor)
         {
             AqlExpression = aqlExpression;
             Visitor = visitor;

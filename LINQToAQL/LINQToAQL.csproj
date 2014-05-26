@@ -59,7 +59,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueryBuilding\AqlExpressionVisitor.cs" />
     <Compile Include="QueryBuilding\AqlFunction\AqlFunctions.cs" />
-    <Compile Include="QueryBuilding\AqlFunction\AqlFunctionVisitorBase.cs" />
+    <Compile Include="QueryBuilding\AqlFunction\AqlFunctionVisitor.cs" />
     <Compile Include="QueryBuilding\AqlFunction\Numeric\Abs.cs" />
     <Compile Include="QueryBuilding\AqlFunction\Numeric\Floor.cs" />
     <Compile Include="QueryBuilding\AqlFunction\Numeric\Ceiling.cs" />

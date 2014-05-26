@@ -4,7 +4,7 @@ using LINQToAQL.Similarity;
 
 namespace LINQToAQL.QueryBuilding.AqlFunction.Similarity
 {
-    internal class JaccardCheck : AqlFunctionVisitorBase
+    internal class JaccardCheck : AqlFunctionVisitor
     {
         public JaccardCheck(StringBuilder aqlExpression, AqlExpressionVisitor visitor) : base(aqlExpression, visitor)
         {

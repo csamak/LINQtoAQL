@@ -3,7 +3,7 @@ using System.Text;
 
 namespace LINQToAQL.QueryBuilding.AqlFunction.String
 {
-    internal class Contains : AqlFunctionVisitorBase
+    internal class Contains : AqlFunctionVisitor
     {
         public Contains(StringBuilder aqlExpression, AqlExpressionVisitor visitor) : base(aqlExpression, visitor)
         {

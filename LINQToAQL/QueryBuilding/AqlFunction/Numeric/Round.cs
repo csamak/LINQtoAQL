@@ -6,7 +6,7 @@ using System.Text;
 namespace LINQToAQL.QueryBuilding.AqlFunction.Numeric
 {
     //Math.Round defaults to MidpointRounding.ToEven, which is equivalent to numeric-round-half-to-even
-    internal class Round : AqlFunctionVisitorBase
+    internal class Round : AqlFunctionVisitor
     {
         public Round(StringBuilder aqlExpression, AqlExpressionVisitor visitor) : base(aqlExpression, visitor)
         {

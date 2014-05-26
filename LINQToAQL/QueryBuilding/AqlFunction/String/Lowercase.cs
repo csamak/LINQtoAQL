@@ -4,7 +4,7 @@ using System.Text;
 
 namespace LINQToAQL.QueryBuilding.AqlFunction.String
 {
-    internal class Lowercase : AqlFunctionVisitorBase
+    internal class Lowercase : AqlFunctionVisitor
     {
         public Lowercase(StringBuilder aqlExpression, AqlExpressionVisitor visitor) : base(aqlExpression, visitor)
         {

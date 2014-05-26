@@ -10,12 +10,12 @@ namespace LINQToAQL.QueryBuilding.AqlFunction
 {
     internal class AqlFunctions
     {
-        public readonly ReadOnlyCollection<AqlFunctionVisitorBase> Functions;
+        public readonly ReadOnlyCollection<AqlFunctionVisitor> Functions;
 
         public AqlFunctions(StringBuilder aqlExpression, AqlExpressionVisitor visitor)
         {
             Functions =
-                new ReadOnlyCollection<AqlFunctionVisitorBase>(
+                new ReadOnlyCollection<AqlFunctionVisitor>(
                     new[]
                     {
                         typeof (Abs), typeof (Ceiling), typeof (Floor), typeof (Round), typeof (CharIndex),
@@ -24,7 +24,7 @@ namespace LINQToAQL.QueryBuilding.AqlFunction
                         typeof (EditDistanceCheck), typeof (Jaccard), typeof (JaccardCheck)
                     }.Select(
                         t => Activator.CreateInstance(t, aqlExpression, visitor))
-                        .Cast<AqlFunctionVisitorBase>()
+                        .Cast<AqlFunctionVisitor>()
                         .ToList());
         }
     }

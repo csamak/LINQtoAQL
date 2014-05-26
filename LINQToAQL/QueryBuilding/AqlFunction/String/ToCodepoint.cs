@@ -4,7 +4,7 @@ using System.Text;
 
 namespace LINQToAQL.QueryBuilding.AqlFunction.String
 {
-    internal class ToCodepoint : AqlFunctionVisitorBase
+    internal class ToCodepoint : AqlFunctionVisitor
     {
         public ToCodepoint(StringBuilder aqlExpression, AqlExpressionVisitor visitor) : base(aqlExpression, visitor)
         {

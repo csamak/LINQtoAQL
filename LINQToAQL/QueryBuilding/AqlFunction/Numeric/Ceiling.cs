@@ -5,7 +5,7 @@ using System.Text;
 
 namespace LINQToAQL.QueryBuilding.AqlFunction.Numeric
 {
-    internal class Ceiling : AqlFunctionVisitorBase
+    internal class Ceiling : AqlFunctionVisitor
     {
         public Ceiling(StringBuilder aqlExpression, AqlExpressionVisitor visitor) : base(aqlExpression, visitor)
         {

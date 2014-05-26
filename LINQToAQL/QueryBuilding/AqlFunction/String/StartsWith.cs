@@ -3,7 +3,7 @@ using System.Text;
 
 namespace LINQToAQL.QueryBuilding.AqlFunction.String
 {
-    internal class StartsWith : AqlFunctionVisitorBase
+    internal class StartsWith : AqlFunctionVisitor
     {
         public StartsWith(StringBuilder aqlExpression, AqlExpressionVisitor visitor) : base(aqlExpression, visitor)
         {

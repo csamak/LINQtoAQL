@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace LINQToAQL.QueryBuilding.AqlFunction.String
 {
-    class CharIndex : AqlFunctionVisitorBase
+    class CharIndex : AqlFunctionVisitor
     {
         public CharIndex(StringBuilder aqlExpression, AqlExpressionVisitor visitor) : base(aqlExpression, visitor)
         {

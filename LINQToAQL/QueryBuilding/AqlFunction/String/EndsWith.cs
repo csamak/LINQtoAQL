@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace LINQToAQL.QueryBuilding.AqlFunction.String
 {
-    class EndsWith : AqlFunctionVisitorBase
+    class EndsWith : AqlFunctionVisitor
     {
         public EndsWith(StringBuilder aqlExpression, AqlExpressionVisitor visitor) : base(aqlExpression, visitor)
         {

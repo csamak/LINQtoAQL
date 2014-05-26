@@ -5,7 +5,7 @@ using System.Text;
 
 namespace LINQToAQL.QueryBuilding.AqlFunction.String
 {
-    internal class Join : AqlFunctionVisitorBase
+    internal class Join : AqlFunctionVisitor
     {
         public Join(StringBuilder aqlExpression, AqlExpressionVisitor visitor) : base(aqlExpression, visitor)
         {

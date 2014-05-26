@@ -142,7 +142,7 @@ namespace LINQToAQL.QueryBuilding
         protected override Expression VisitMethodCallExpression(MethodCallExpression expression)
         {
             foreach (
-                AqlFunctionVisitorBase function in
+                AqlFunctionVisitor function in
                     _aqlFunctions.Functions.Where(function => function.IsVisitable(expression)))
             {
                 function.VisitAqlFunction(expression);
