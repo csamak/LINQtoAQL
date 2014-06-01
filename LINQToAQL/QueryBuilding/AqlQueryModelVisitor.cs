@@ -141,7 +141,6 @@ namespace LINQToAQL.QueryBuilding
             QueryBuilder.AddFromPart(joinClause.ItemName,
                 "dataset " + (joinClause.ItemType.GetAttributeValue((DatasetAttribute d) => d.Name) ??
                               joinClause.ItemType.Name));
-            ;
             QueryBuilder.AddWherePart("({0} = {1})", GetAqlExpression(joinClause.OuterKeySelector),
                 GetAqlExpression(joinClause.InnerKeySelector));
             base.VisitJoinClause(joinClause, queryModel, index);

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
+using LINQToAQL.Similarity;
 using LINQToAQL.Test.Model;
 using NUnit.Framework;
 
@@ -142,9 +143,32 @@ namespace LINQToAQL.Test.QueryBuilding
         public void GroupingAndLimits10()
         {
             var query =
-                dv.TweetMessages.GroupBy(t => t.user.ScreenName).OrderByDescending(g => g.Count()).Take(3).Select(uid => new { user = uid.Key, count = uid.Count() });
+                dv.TweetMessages.GroupBy(t => t.user.ScreenName)
+                    .OrderByDescending(g => g.Count())
+                    .Take(3)
+                    .Select(uid => new {user = uid.Key, count = uid.Count()});
             Assert.AreEqual(
                 "for $uid in (for $g in (for $t in dataset TweetMessages group by $t.user.screen-name with $t return $t) order by count((for $generated_uservar_uservar_1 in $g return $generated_uservar_uservar_1)) desc limit 3 return $g) return { \"user\": $uid[0].screen-name, \"count\": count((for $generated_uservar_1 in $uid return $generated_uservar_1)) }",
+                GetQueryString(query.Expression));
+        }
+
+        [Test]
+        public void LeftOuterFuzzyJoin11()
+        {
+            var query =
+                dv.TweetMessages.Select(
+                    t =>
+                        new
+                        {
+                            tweet = t,
+                            similarTweets =
+                                dv.TweetMessages.Where(
+                                    t2 =>
+                                        (bool) (t.ReferredTopics.JaccardCheck(t2.ReferredTopics, 0.3)[0]) &&
+                                        t.tweetid != t2.tweetid).Select(t2 => t2.ReferredTopics)
+                        });
+            Assert.AreEqual(
+                "for $t in dataset TweetMessages return { \"tweet\": $t, \"similarTweets\": (for $t2 in dataset TweetMessages where (similarity-jaccard-check($t.referred-topics, $t2.referred-topics, 0.3)[0] and ($t.tweetid != $t2.tweetid)) return $t2.referred-topics) }",
                 GetQueryString(query.Expression));
         }
     }

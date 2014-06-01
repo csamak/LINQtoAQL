@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using LINQToAQL.DataAnnotations;
+using NUnit.Framework;
 
 namespace LINQToAQL.Test.Model
 {
@@ -13,6 +15,9 @@ namespace LINQToAQL.Test.Model
         public DateTime SendTime { get; set; }
 
         //referred-topics: {{ string }}
+        //list the right type?
+        [Field(Name = "referred-topics")]
+        public List<string> ReferredTopics { get; set; }
         [Field(Name = "message-text")]
         public string MessageText { get; set; }
     }
