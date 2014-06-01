@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Linq.Expressions;
 using LINQToAQL.QueryBuilding;
@@ -8,21 +9,26 @@ using Remotion.Linq.Parsing.Structure;
 
 namespace LINQToAQL.Test.QueryBuilding
 {
-    internal class Grouping
+    internal class Grouping : QueryBuildingBase
     {
-        private readonly TinySocial dv = new TinySocial(new Uri("http://33.0.0.2:19002"));
-
         [Test]
         public void SingleReturnKey()
         {
-            IQueryable<int> query = dv.FacebookUsers.GroupBy(u => u.id).Select(g => g.Key);
-            Assert.AreEqual("for $u in dataset FacebookUsers group by $g := $u.id with $u return $g",
+            var query = from u in dv.FacebookUsers
+                group u by u.id into g
+                select g.Key;
+            Assert.AreEqual("for $g in (for $u in dataset FacebookUsers group by $u.id with $u return $u) return $g[0].id",
                 GetQueryString(query.Expression));
         }
 
-        private static string GetQueryString(Expression exp)
+        [Test]
+        public void ReturnCount()
         {
-            return AqlQueryGenerator.GenerateAqlQuery(QueryParser.CreateDefault().GetParsedQuery(exp));
+            var query = from u in dv.FacebookUsers
+                group u by u.id into g
+                select g.Count();
+            Assert.AreEqual("for $g in (for $u in dataset FacebookUsers group by $u.id with $u return $u) return count((for $generated_uservar_1 in $g return $generated_uservar_1))",
+                GetQueryString(query.Expression));
         }
     }
 }

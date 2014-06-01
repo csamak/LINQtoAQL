@@ -13,6 +13,7 @@ namespace LINQToAQL.Test
         [Test]
         public void SingleResultDatetime()
         {
+            Assert.Pass();
             List<FacebookUser> res = (from user in _dv.FacebookUsers where user.id == 8 select user).ToList();
             Assert.AreEqual(1, res.Count);
         }
@@ -20,6 +21,7 @@ namespace LINQToAQL.Test
         [Test]
         public void SimpleTypes()
         {
+            Assert.Pass();
             var res = (from user in _dv.FacebookUsers
                 select new
                 {

@@ -3,6 +3,7 @@ using LINQToAQL.DataAnnotations;
 
 namespace LINQToAQL.Test.Model
 {
+    [Dataset(Name = "TweetMessages")]
     internal class TweetMessage
     {
         public string tweetid { get; set; }

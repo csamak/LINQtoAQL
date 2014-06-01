@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
+using LINQToAQL.DataAnnotations;
+using LINQToAQL.Extensions;
 using Remotion.Linq;
 using Remotion.Linq.Clauses;
+using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Clauses.ResultOperators;
 
 namespace LINQToAQL.QueryBuilding
@@ -65,7 +68,13 @@ namespace LINQToAQL.QueryBuilding
                 QueryBuilder.ResultPattern = "max({0})";
             else if (resultOperator is MinResultOperator)
                 QueryBuilder.ResultPattern = "min({0})";
-                //else if (resultOperator is GroupResultOperator)
+            else if (resultOperator is GroupResultOperator)
+            {
+                var groupResult = (GroupResultOperator) resultOperator;
+                QueryBuilder.GroupPart = string.Format(" group by {0} with {1}",
+                    AqlExpressionVisitor.GetAqlExpression(groupResult.KeySelector),
+                    AqlExpressionVisitor.GetAqlExpression(groupResult.ElementSelector));
+            }
             else
                 throw new NotSupportedException("Operator not supported!");
             base.VisitResultOperator(resultOperator, queryModel, index);
@@ -73,9 +82,32 @@ namespace LINQToAQL.QueryBuilding
 
         public override void VisitMainFromClause(MainFromClause fromClause, QueryModel queryModel)
         {
-            //var test = GetAqlExpression(fromClause.FromExpression);
-            QueryBuilder.AddFromPart(fromClause);
+            VisitFromClause(fromClause, queryModel);
             base.VisitMainFromClause(fromClause, queryModel);
+        }
+
+        private void VisitFromClause(FromClauseBase fromClause, QueryModel queryModel)
+        {
+            if (fromClause.FromExpression is SubQueryExpression)
+                //QueryBuilder.NestedFrom = AqlQueryGenerator.GenerateAqlQuery(((SubQueryExpression) fromClause.FromExpression).QueryModel, true);
+                //QueryBuilder.AddFromPart(new MainFromClause("GroupFrom", fromClause.FromExpression.Type, fromClause.FromExpression));
+                QueryBuilder.AddFromPart(fromClause.ItemName,
+                    AqlQueryGenerator.GenerateAqlQuery(((SubQueryExpression) fromClause.FromExpression).QueryModel, true));
+            else
+            {
+                //string dataset = querySource.FromExpression.NodeType == ExpressionType.MemberAccess
+                //? AqlExpressionVisitor.GetAqlExpression(querySource.FromExpression)
+                //: querySource.ItemType.GetAttributeValue((DatasetAttribute d) => d.Name);
+                //FromParts.Add(Tuple.Create(querySource.ItemName, dataset ?? querySource.ItemType.Name));
+                string source;
+                if (fromClause.FromExpression.NodeType == ExpressionType.Constant)
+                    source = "dataset " + (fromClause.ItemType.GetAttributeValue((DatasetAttribute d) => d.Name) ??
+                             fromClause.ItemType.Name);
+                else
+                    source = AqlExpressionVisitor.GetAqlExpression(fromClause.FromExpression);
+                //should used referencedquerysource instead of itemname?
+                QueryBuilder.AddFromPart(fromClause.ItemName, source);
+            }
         }
 
         public override void VisitSelectClause(SelectClause selectClause, QueryModel queryModel)
@@ -98,7 +130,12 @@ namespace LINQToAQL.QueryBuilding
 
         public override void VisitJoinClause(JoinClause joinClause, QueryModel queryModel, int index)
         {
-            QueryBuilder.AddFromPart(joinClause); //cross join
+            //TODO: index
+            //cross join
+            QueryBuilder.AddFromPart(joinClause.ItemName,
+                "dataset " + (joinClause.ItemType.GetAttributeValue((DatasetAttribute d) => d.Name) ??
+                joinClause.ItemType.Name));
+            ;
             QueryBuilder.AddWherePart("({0} = {1})", GetAqlExpression(joinClause.OuterKeySelector),
                 GetAqlExpression(joinClause.InnerKeySelector));
             base.VisitJoinClause(joinClause, queryModel, index);
@@ -106,7 +143,7 @@ namespace LINQToAQL.QueryBuilding
 
         public override void VisitAdditionalFromClause(AdditionalFromClause fromClause, QueryModel queryModel, int index)
         {
-            QueryBuilder.AddFromPart(fromClause);
+            VisitFromClause(fromClause, queryModel);
             base.VisitAdditionalFromClause(fromClause, queryModel, index);
         }
 

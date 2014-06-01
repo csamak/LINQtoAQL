@@ -20,6 +20,9 @@ namespace LINQToAQL.QueryBuilding
         }
 
         public string SelectPart { get; set; }
+        public string SubFrom { get; set; }
+        public string NestedFrom { get; set; }
+        public string GroupPart { get; set; }
         public bool Existential { get; set; }
         public bool Universal { get; set; }
         public string ResultPattern { get; set; }
@@ -29,20 +32,21 @@ namespace LINQToAQL.QueryBuilding
 
         public bool IsSubQuery { get; set; }
 
-        public void AddFromPart(FromClauseBase querySource)
+        public void AddFromPart(string var, string source)
         {
+            FromParts.Add(Tuple.Create(var, source));
             //need to handle subqueries!
-            string dataset = querySource.FromExpression.NodeType == ExpressionType.MemberAccess
-                ? AqlExpressionVisitor.GetAqlExpression(querySource.FromExpression)
-                : querySource.ItemType.GetAttributeValue((DatasetAttribute d) => d.Name);
-            FromParts.Add(Tuple.Create(querySource.ItemName, dataset ?? querySource.ItemType.Name));
+            //string dataset = querySource.FromExpression.NodeType == ExpressionType.MemberAccess
+                //? AqlExpressionVisitor.GetAqlExpression(querySource.FromExpression)
+                //: querySource.ItemType.GetAttributeValue((DatasetAttribute d) => d.Name);
+            //FromParts.Add(Tuple.Create(querySource.ItemName, dataset ?? querySource.ItemType.Name));
         }
 
-        public void AddFromPart(JoinClause querySource)
-        {
-            FromParts.Add(Tuple.Create(querySource.ItemName,
-                querySource.ItemType.GetAttributeValue((DatasetAttribute d) => d.Name) ?? querySource.ItemType.Name));
-        }
+        //public void AddFromPart(JoinClause querySource)
+        //{
+            //FromParts.Add(Tuple.Create(querySource.ItemName,
+                //querySource.ItemType.GetAttributeValue((DatasetAttribute d) => d.Name) ?? querySource.ItemType.Name));
+        //}
 
         public void AddWherePart(string formatString, params object[] args)
         {
@@ -60,15 +64,21 @@ namespace LINQToAQL.QueryBuilding
             if (string.IsNullOrEmpty(SelectPart) || FromParts.Count == 0)
                 throw new InvalidOperationException("A query must have a return and at least one from.");
             if (IsSubQuery) stringBuilder.Append('(');
-            if (Existential)
-                stringBuilder.Append(string.Join(" ",
-                    FromParts.Select(f => string.Format("some ${0} in {1}", f.Item1, f.Item2))));
-            else if (Universal)
-                stringBuilder.Append(string.Join(" ",
-                    FromParts.Select(f => string.Format("every ${0} in {1}", f.Item1, f.Item2))));
+            if (!string.IsNullOrEmpty(NestedFrom))
+                stringBuilder.AppendFormat("({0})", NestedFrom);
             else
-                stringBuilder.Append(string.Join(" ",
-                    FromParts.Select(f => string.Format("for ${0} in dataset {1}", f.Item1, f.Item2))));
+            {
+                if (Existential)
+                    stringBuilder.Append(string.Join(" ",
+                        FromParts.Select(f => string.Format("some ${0} in {1}", f.Item1, f.Item2))));
+                else if (Universal)
+                    stringBuilder.Append(string.Join(" ",
+                        FromParts.Select(f => string.Format("every ${0} in {1}", f.Item1, f.Item2))));
+                else
+                    stringBuilder.Append(string.Join(" ",
+                        FromParts.Select(f => string.Format("for ${0} in {1}", f.Item1, f.Item2))));
+            }
+            stringBuilder.Append(GroupPart);
             if (WhereParts.Count > 0)
                 stringBuilder.AppendFormat(" {0} {1}", (Existential || Universal) ? "satisfies" : "where",
                     string.Join(" and ", WhereParts));
@@ -88,6 +98,7 @@ namespace LINQToAQL.QueryBuilding
         /// </summary>
         private static string FormatGenerated(string aql)
         {
+            //TODO: use quotes to escape in AQL
             return aql.Replace("$generated_", "$generated_uservar_").Replace("$<generated>_", "$generated_");
         }
     }

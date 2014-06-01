@@ -8,8 +8,10 @@ using System.Text;
 using LINQToAQL.DataAnnotations;
 using LINQToAQL.Extensions;
 using LINQToAQL.QueryBuilding.AqlFunction;
+using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Clauses.ExpressionTreeVisitors;
+using Remotion.Linq.Clauses.ResultOperators;
 using Remotion.Linq.Parsing;
 
 namespace LINQToAQL.QueryBuilding
@@ -95,7 +97,23 @@ namespace LINQToAQL.QueryBuilding
 
         protected override Expression VisitMemberExpression(MemberExpression expression)
         {
-            if (expression.Member.Name == "Length" && expression.Member.DeclaringType == typeof (string))
+            if (expression.Member.Name == "Key" &&
+                expression.Expression.Type.GetGenericTypeDefinition() == typeof (IGrouping<,>)) //grouping
+            {
+                var temp =
+                    (MemberExpression)
+                        ((GroupResultOperator)
+                            ((SubQueryExpression)
+                                ((MainFromClause)
+                                    ((QuerySourceReferenceExpression) expression.Expression).ReferencedQuerySource)
+                                    .FromExpression).QueryModel.ResultOperators[0]).KeySelector;
+                VisitExpression(expression.Expression);
+                string field = temp.Expression.Type.GetMember(temp.Member.Name)
+                    .First(m => m.MemberType == MemberTypes.Property || m.MemberType == MemberTypes.Field)
+                    .GetAttributeValue((FieldAttribute f) => f.Name);
+                _aqlExpression.AppendFormat("[0].{0}", field ?? temp.Member.Name);
+            }
+            else if (expression.Member.Name == "Length" && expression.Member.DeclaringType == typeof (string))
             {
                 _aqlExpression.Append("string-length(");
                 VisitExpression(expression.Expression);
