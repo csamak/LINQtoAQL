@@ -100,13 +100,12 @@ namespace LINQToAQL.QueryBuilding
             if (expression.Member.Name == "Key" &&
                 expression.Expression.Type.GetGenericTypeDefinition() == typeof (IGrouping<,>)) //grouping
             {
-                var temp =
-                    (MemberExpression)
-                        ((GroupResultOperator)
-                            ((SubQueryExpression)
-                                ((MainFromClause)
-                                    ((QuerySourceReferenceExpression) expression.Expression).ReferencedQuerySource)
-                                    .FromExpression).QueryModel.ResultOperators[0]).KeySelector;
+                MemberExpression temp =
+                    GetKeySelector(
+                        (SubQueryExpression)
+                            ((MainFromClause)
+                                ((QuerySourceReferenceExpression) expression.Expression).ReferencedQuerySource)
+                                .FromExpression);
                 VisitExpression(expression.Expression);
                 string field = temp.Expression.Type.GetMember(temp.Member.Name)
                     .First(m => m.MemberType == MemberTypes.Property || m.MemberType == MemberTypes.Field)
@@ -128,6 +127,15 @@ namespace LINQToAQL.QueryBuilding
                 _aqlExpression.AppendFormat(".{0}", field ?? expression.Member.Name);
             }
             return expression;
+        }
+
+        //TODO: should we search secondary from clauses?
+        private MemberExpression GetKeySelector(SubQueryExpression exp)
+        {
+            ResultOperatorBase temp = exp.QueryModel.ResultOperators.FirstOrDefault(r => r is GroupResultOperator);
+            return temp == null
+                ? GetKeySelector((SubQueryExpression) exp.QueryModel.MainFromClause.FromExpression)
+                : (MemberExpression) ((GroupResultOperator) temp).KeySelector;
         }
 
         protected override Expression VisitConstantExpression(ConstantExpression expression)

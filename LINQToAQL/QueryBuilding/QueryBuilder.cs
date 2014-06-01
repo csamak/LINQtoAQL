@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Text;
-using LINQToAQL.DataAnnotations;
-using LINQToAQL.Extensions;
-using Remotion.Linq.Clauses;
 
 namespace LINQToAQL.QueryBuilding
 {
@@ -23,6 +19,7 @@ namespace LINQToAQL.QueryBuilding
         public string SubFrom { get; set; }
         public string NestedFrom { get; set; }
         public string GroupPart { get; set; }
+        public string LimitPart { get; set; }
         public bool Existential { get; set; }
         public bool Universal { get; set; }
         public string ResultPattern { get; set; }
@@ -37,15 +34,15 @@ namespace LINQToAQL.QueryBuilding
             FromParts.Add(Tuple.Create(var, source));
             //need to handle subqueries!
             //string dataset = querySource.FromExpression.NodeType == ExpressionType.MemberAccess
-                //? AqlExpressionVisitor.GetAqlExpression(querySource.FromExpression)
-                //: querySource.ItemType.GetAttributeValue((DatasetAttribute d) => d.Name);
+            //? AqlExpressionVisitor.GetAqlExpression(querySource.FromExpression)
+            //: querySource.ItemType.GetAttributeValue((DatasetAttribute d) => d.Name);
             //FromParts.Add(Tuple.Create(querySource.ItemName, dataset ?? querySource.ItemType.Name));
         }
 
         //public void AddFromPart(JoinClause querySource)
         //{
-            //FromParts.Add(Tuple.Create(querySource.ItemName,
-                //querySource.ItemType.GetAttributeValue((DatasetAttribute d) => d.Name) ?? querySource.ItemType.Name));
+        //FromParts.Add(Tuple.Create(querySource.ItemName,
+        //querySource.ItemType.GetAttributeValue((DatasetAttribute d) => d.Name) ?? querySource.ItemType.Name));
         //}
 
         public void AddWherePart(string formatString, params object[] args)
@@ -53,9 +50,10 @@ namespace LINQToAQL.QueryBuilding
             WhereParts.Add(string.Format(formatString, args));
         }
 
-        public void AddOrderByPart(IEnumerable<string> orderings)
+        //expression, ordering
+        public void AddOrderByPart(IEnumerable<Tuple<string, string>> orderings)
         {
-            OrderByParts.Insert(0, string.Join(", ", orderings));
+            OrderByParts.Insert(0, string.Join(", ", orderings.Select(t => t.Item1 + " " + t.Item2)));
         }
 
         public string BuildAqlString()
@@ -84,6 +82,7 @@ namespace LINQToAQL.QueryBuilding
                     string.Join(" and ", WhereParts));
             if (OrderByParts.Count > 0)
                 stringBuilder.AppendFormat(" order by {0}", string.Join(", ", OrderByParts));
+            stringBuilder.Append(LimitPart);
             if (!(Existential || Universal))
                 stringBuilder.AppendFormat(" return {0}", SelectPart);
             if (IsSubQuery) stringBuilder.Append(')');

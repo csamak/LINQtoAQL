@@ -137,5 +137,15 @@ namespace LINQToAQL.Test.QueryBuilding
                 "for $uid in (for $t in dataset TweetMessages group by $t.user.screen-name with $t return $t) return { \"user\": $uid[0].screen-name, \"count\": count((for $generated_uservar_1 in $uid return $generated_uservar_1)) }",
                 GetQueryString(query.Expression));
         }
+
+        [Test]
+        public void GroupingAndLimits10()
+        {
+            var query =
+                dv.TweetMessages.GroupBy(t => t.user.ScreenName).OrderByDescending(g => g.Count()).Take(3).Select(uid => new { user = uid.Key, count = uid.Count() });
+            Assert.AreEqual(
+                "for $uid in (for $g in (for $t in dataset TweetMessages group by $t.user.screen-name with $t return $t) order by count((for $generated_uservar_uservar_1 in $g return $generated_uservar_uservar_1)) desc limit 3 return $g) return { \"user\": $uid[0].screen-name, \"count\": count((for $generated_uservar_1 in $uid return $generated_uservar_1)) }",
+                GetQueryString(query.Expression));
+        }
     }
 }

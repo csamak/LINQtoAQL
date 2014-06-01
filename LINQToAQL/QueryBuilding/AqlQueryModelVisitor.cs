@@ -68,6 +68,8 @@ namespace LINQToAQL.QueryBuilding
                 QueryBuilder.ResultPattern = "max({0})";
             else if (resultOperator is MinResultOperator)
                 QueryBuilder.ResultPattern = "min({0})";
+            else if (resultOperator is TakeResultOperator)
+                QueryBuilder.LimitPart = " limit " + ((TakeResultOperator) resultOperator).Count;
             else if (resultOperator is GroupResultOperator)
             {
                 var groupResult = (GroupResultOperator) resultOperator;
@@ -102,7 +104,7 @@ namespace LINQToAQL.QueryBuilding
                 string source;
                 if (fromClause.FromExpression.NodeType == ExpressionType.Constant)
                     source = "dataset " + (fromClause.ItemType.GetAttributeValue((DatasetAttribute d) => d.Name) ??
-                             fromClause.ItemType.Name);
+                                           fromClause.ItemType.Name);
                 else
                     source = AqlExpressionVisitor.GetAqlExpression(fromClause.FromExpression);
                 //should used referencedquerysource instead of itemname?
@@ -124,7 +126,11 @@ namespace LINQToAQL.QueryBuilding
 
         public override void VisitOrderByClause(OrderByClause orderByClause, QueryModel queryModel, int index)
         {
-            QueryBuilder.AddOrderByPart(orderByClause.Orderings.Select(o => GetAqlExpression(o.Expression)));
+            QueryBuilder.AddOrderByPart(
+                orderByClause.Orderings.Select(
+                    o =>
+                        Tuple.Create(GetAqlExpression(o.Expression),
+                            o.OrderingDirection == OrderingDirection.Asc ? "asc" : "desc")));
             base.VisitOrderByClause(orderByClause, queryModel, index);
         }
 
@@ -134,7 +140,7 @@ namespace LINQToAQL.QueryBuilding
             //cross join
             QueryBuilder.AddFromPart(joinClause.ItemName,
                 "dataset " + (joinClause.ItemType.GetAttributeValue((DatasetAttribute d) => d.Name) ??
-                joinClause.ItemType.Name));
+                              joinClause.ItemType.Name));
             ;
             QueryBuilder.AddWherePart("({0} = {1})", GetAqlExpression(joinClause.OuterKeySelector),
                 GetAqlExpression(joinClause.InnerKeySelector));
