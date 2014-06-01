@@ -79,6 +79,7 @@
     <Compile Include="QueryBuilding\AqlFunction\String\Substring.cs" />
     <Compile Include="QueryBuilding\AqlFunction\String\SubstringWithLength.cs" />
     <Compile Include="QueryBuilding\AqlFunction\String\ToCodepoint.cs" />
+    <Compile Include="QueryBuilding\AqlFunction\Tokenizing\WordTokens.cs" />
     <Compile Include="QueryBuilding\AqlQueryModelVisitor.cs" />
     <Compile Include="QueryBuilding\Operators.cs" />
     <Compile Include="QueryBuilding\ParameterCollection.cs" />

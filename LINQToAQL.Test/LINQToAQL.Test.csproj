@@ -73,6 +73,7 @@
     <Compile Include="QueryBuilding\AqlFunctions\Similarity.cs" />
     <Compile Include="QueryBuilding\AqlFunctions\String.cs" />
     <Compile Include="QueryBuilding\AqlFunctions\Numeric.cs" />
+    <Compile Include="QueryBuilding\AqlFunctions\Tokenizing.cs" />
     <Compile Include="QueryBuilding\Grouping.cs" />
     <Compile Include="QueryBuilding\QueryBuildingBase.cs" />
   </ItemGroup>
