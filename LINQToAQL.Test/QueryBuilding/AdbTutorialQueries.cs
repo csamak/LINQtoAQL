@@ -83,6 +83,24 @@ namespace LINQToAQL.Test.QueryBuilding
                 GetQueryString(query.Expression));
         }
 
+        [Test]
+        public void ThetaJoin4()
+        {
+            var query =
+                dv.TweetMessages.Select(
+                    t =>
+                        new
+                        {
+                            message = t.MessageText,
+                            nearbyMessages =
+                                dv.TweetMessages.Where(t2 => t.SenderLocation.Distance(t2.SenderLocation) <= 1)
+                                    .Select(t2 => new {msgtxt = t2.MessageText})
+                        });
+            Assert.AreEqual(
+                "for $t in dataset TweetMessages return { \"message\": $t.message-text, \"nearbyMessages\": (for $t2 in dataset TweetMessages where (spatial-distance($t.sender-location, $t2.sender-location) <= 1) return { \"msgtxt\": $t2.message-text }) }",
+                GetQueryString(query.Expression));
+        }
+
         //skipped queries 4 and 5 for now.
 
         [Test]

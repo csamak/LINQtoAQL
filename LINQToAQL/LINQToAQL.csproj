@@ -70,6 +70,7 @@
     <Compile Include="QueryBuilding\AqlFunction\Similarity\EditDistanceCheck.cs" />
     <Compile Include="QueryBuilding\AqlFunction\Similarity\Jaccard.cs" />
     <Compile Include="QueryBuilding\AqlFunction\Similarity\JaccardCheck.cs" />
+    <Compile Include="QueryBuilding\AqlFunction\Spatial\SpatialDistance.cs" />
     <Compile Include="QueryBuilding\AqlFunction\String\CharIndex.cs" />
     <Compile Include="QueryBuilding\AqlFunction\String\Contains.cs" />
     <Compile Include="QueryBuilding\AqlFunction\String\EndsWith.cs" />
