@@ -101,7 +101,14 @@ namespace LINQToAQL.Test.QueryBuilding
                 GetQueryString(query.Expression));
         }
 
-        //skipped queries 4 and 5 for now.
+        [Test]
+        public void FuzzyJoin5()
+        {
+            var query = dv.FacebookUsers.Select(fbu => new {id = fbu.id, name = fbu.name, similarUsers = dv.TweetMessages.Where(t => t.user.name.EditDistanceCheck(fbu.name, 3)).Select(t => new {twitterScreenname = t.user.ScreenName, twitterName = t.user.name})});
+            Assert.AreEqual(
+                "for $fbu in dataset FacebookUsers return { \"id\": $fbu.id, \"name\": $fbu.name, \"similarUsers\": (for $t in dataset TweetMessages where edit-distance-check($t.user.name, $fbu.name, 3) return { \"twitterScreenname\": $t.user.screen-name, \"twitterName\": $t.user.name }) }",
+                GetQueryString(query.Expression));
+        }
 
         [Test]
         public void ExistentialQuantification6()
