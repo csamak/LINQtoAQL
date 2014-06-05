@@ -71,6 +71,7 @@
     <Compile Include="Model\TinySocial.cs" />
     <Compile Include="QueryBuilding\AqlFunctions\Aggregate.cs" />
     <Compile Include="QueryBuilding\AqlFunctions\Similarity.cs" />
+    <Compile Include="QueryBuilding\AqlFunctions\Spatial.cs" />
     <Compile Include="QueryBuilding\AqlFunctions\String.cs" />
     <Compile Include="QueryBuilding\AqlFunctions\Numeric.cs" />
     <Compile Include="QueryBuilding\AqlFunctions\Tokenizing.cs" />

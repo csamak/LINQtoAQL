@@ -69,7 +69,9 @@ namespace LINQToAQL.QueryBuilding
             else if (resultOperator is MinResultOperator)
                 QueryBuilder.ResultPattern = "min({0})";
             else if (resultOperator is TakeResultOperator)
-                QueryBuilder.LimitPart = " limit " + ((TakeResultOperator) resultOperator).Count;
+                QueryBuilder.LimitPart = " limit " +
+                                         AqlExpressionVisitor.GetAqlExpression(
+                                             ((TakeResultOperator) resultOperator).Count);
             else if (resultOperator is GroupResultOperator)
             {
                 var groupResult = (GroupResultOperator) resultOperator;

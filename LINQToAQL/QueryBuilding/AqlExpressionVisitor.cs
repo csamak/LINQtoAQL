@@ -8,6 +8,7 @@ using System.Text;
 using LINQToAQL.DataAnnotations;
 using LINQToAQL.Extensions;
 using LINQToAQL.QueryBuilding.AqlFunction;
+using LINQToAQL.Spatial;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Clauses.ExpressionTreeVisitors;
@@ -183,6 +184,14 @@ namespace LINQToAQL.QueryBuilding
             {
                 _aqlExpression.Append("codepoint-to-string(");
                 VisitExpression(expression.Arguments[0]);
+                _aqlExpression.Append(")");
+            }
+            else if (expression.Type == typeof (Point))
+            {
+                _aqlExpression.Append("create-point(");
+                VisitExpression(expression.Arguments[0]);
+                _aqlExpression.Append(", ");
+                VisitExpression(expression.Arguments[1]);
                 _aqlExpression.Append(")");
             }
             else

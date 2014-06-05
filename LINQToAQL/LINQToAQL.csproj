@@ -86,6 +86,7 @@
     <Compile Include="QueryBuilding\QueryBuilder.cs" />
     <Compile Include="Similarity\EditDistanceExtensions.cs" />
     <Compile Include="Similarity\JaccardExtensions.cs" />
+    <Compile Include="Spatial\Point.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
