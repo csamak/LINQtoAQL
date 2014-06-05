@@ -180,6 +180,7 @@ namespace LINQToAQL.QueryBuilding
 
         protected override Expression VisitNewExpression(NewExpression expression)
         {
+            //TODO: refactor this in the same way as the AqlFunctions
             if (expression.Type == typeof (string))
             {
                 _aqlExpression.Append("codepoint-to-string(");
@@ -189,6 +190,14 @@ namespace LINQToAQL.QueryBuilding
             else if (expression.Type == typeof (Point))
             {
                 _aqlExpression.Append("create-point(");
+                VisitExpression(expression.Arguments[0]);
+                _aqlExpression.Append(", ");
+                VisitExpression(expression.Arguments[1]);
+                _aqlExpression.Append(")");
+            }
+            else if (expression.Type == typeof (Line))
+            {
+                _aqlExpression.Append("create-line(");
                 VisitExpression(expression.Arguments[0]);
                 _aqlExpression.Append(", ");
                 VisitExpression(expression.Arguments[1]);
