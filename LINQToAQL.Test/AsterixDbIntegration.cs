@@ -13,21 +13,19 @@ namespace LINQToAQL.Test
         [Test]
         public void SingleResultBasicType()
         {
-            Assert.Pass();
-            List<FacebookUser> res = (from user in _dv.FacebookUsers where user.id == 8 select user).ToList();
+            var res = (from user in _dv.FacebookUsers where user.id == 8 select user.name).ToList();
             Assert.AreEqual(1, res.Count);
         }
 
         [Test]
         public void SimpleTypes()
         {
-            Assert.Pass();
-            var res = (from user in _dv.FacebookUsers
-                select new
-                {
-                    uname = user.name,
+            var res = (from user in _dv.FacebookUsers select user.name).ToList();
+                //select new
+                //{
+                    //uname = user.name,
                     //messages = (from message in dv.FacebookMessages where message.AuthorId == user.id select message.Message)
-                }).ToList();
+                //}).ToList();
             CollectionAssert.AreEquivalent(res,
                 new[]
                 {
