@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.30324.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LINQToAQL", "LINQToAQL.csproj", "{348A9215-DAF5-4D47-87DA-2A32DFAFCBDD}"
 EndProject
@@ -12,7 +12,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{E48A9B
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LINQToAQL.Test", "..\LINQToAQL.Test\LINQToAQL.Test.csproj", "{B0A4D07A-34AF-416B-8ACF-87F4CC089B36}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LINQToAQL.Tests.Unit", "..\LINQToAQL.Test\LINQToAQL.Tests.Unit.csproj", "{B0A4D07A-34AF-416B-8ACF-87F4CC089B36}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LINQToAQL.Tests.Common", "..\LINQToAQL.Tests.Common\LINQToAQL.Tests.Common.csproj", "{EEA2C1A3-BFA7-40F8-B2D4-CF40D2CE39E5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LINQToAQL.Tests.Integration", "LINQToAQL.Tests.Integration\LINQToAQL.Tests.Integration.csproj", "{A214C48F-E214-46C5-ACDE-9FFB0B5A0C95}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -28,6 +32,14 @@ Global
 		{B0A4D07A-34AF-416B-8ACF-87F4CC089B36}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B0A4D07A-34AF-416B-8ACF-87F4CC089B36}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B0A4D07A-34AF-416B-8ACF-87F4CC089B36}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EEA2C1A3-BFA7-40F8-B2D4-CF40D2CE39E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EEA2C1A3-BFA7-40F8-B2D4-CF40D2CE39E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EEA2C1A3-BFA7-40F8-B2D4-CF40D2CE39E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EEA2C1A3-BFA7-40F8-B2D4-CF40D2CE39E5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A214C48F-E214-46C5-ACDE-9FFB0B5A0C95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A214C48F-E214-46C5-ACDE-9FFB0B5A0C95}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A214C48F-E214-46C5-ACDE-9FFB0B5A0C95}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A214C48F-E214-46C5-ACDE-9FFB0B5A0C95}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

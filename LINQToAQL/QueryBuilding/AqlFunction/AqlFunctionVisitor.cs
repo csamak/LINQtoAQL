@@ -21,11 +21,11 @@ namespace LINQToAQL.QueryBuilding.AqlFunction
         protected void AqlFunction(string name, params Expression[] args)
         {
             AqlExpression.AppendFormat("{0}(", name);
-            Visitor.VisitExpression(args[0]);
+            Visitor.Visit(args[0]);
             foreach (Expression arg in args.Skip(1))
             {
                 AqlExpression.Append(", ");
-                Visitor.VisitExpression(arg);
+                Visitor.Visit(arg);
             }
             AqlExpression.Append(")");
         }

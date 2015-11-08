@@ -17,7 +17,7 @@ namespace LINQToAQL.QueryBuilding.AqlFunction.String
         public override void Visit(MethodCallExpression expression)
         {
             AqlExpression.Append("string-to-codepoint(");
-            Visitor.VisitExpression(expression.Object);
+            Visitor.Visit(expression.Object);
             AqlExpression.Append(")[");
             AqlExpression.Append(expression.Arguments[0]);
             AqlExpression.Append("]");
