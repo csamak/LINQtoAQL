@@ -61,6 +61,8 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Deserialization\BaseResponseDeserializer.cs" />
+    <Compile Include="Deserialization\Json\JsonResponseDeserializer.cs" />
     <Compile Include="QueryBuilding\AdbTutorialQueries.cs" />
     <Compile Include="AsterixDbIntegration.cs" />
     <Compile Include="Model\Employment.cs" />
@@ -89,6 +91,7 @@
       <Name>LINQToAQL</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

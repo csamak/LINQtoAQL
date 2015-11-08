@@ -8,30 +8,31 @@ namespace LINQToAQL.Test
 {
     internal class AsterixDbIntegration
     {
-        private readonly TinySocial _dv = new TinySocial(new Uri("http://33.0.0.2:19002"));
+        private readonly TinySocial _dv = new TinySocial(new Uri("http://localhost:19002"));
 
         [Test]
-        public void SingleResultBasicType()
+        public void SingleString()
         {
-            var res = (from user in _dv.FacebookUsers where user.id == 8 select user.name).ToList();
-            Assert.AreEqual(1, res.Count);
+            CollectionAssert.AreEquivalent(from user in _dv.FacebookUsers where user.id == 8 select user.name, new[] { "NilaMilliron" });
         }
 
         [Test]
-        public void SimpleTypes()
+        public void MultipleStrings()
         {
-            var res = (from user in _dv.FacebookUsers select user.name).ToList();
-                //select new
-                //{
-                    //uname = user.name,
-                    //messages = (from message in dv.FacebookMessages where message.AuthorId == user.id select message.Message)
-                //}).ToList();
+            var res = from user in _dv.FacebookUsers select user.name;
             CollectionAssert.AreEquivalent(res,
                 new[]
                 {
                     "MargaritaStoddard", "IsbelDull", "EmoryUnk", "NicholasStroh", "VonKemble", "WillisWynne",
                     "SuzannaTillson", "NilaMilliron", "WoodrowNehling", "BramHatch"
                 });
+        }
+
+        [Test]
+        public void CountScalar()
+        {
+            //TODO: support LongCount()
+            Assert.AreEqual(_dv.FacebookUsers.Count(), 10);
         }
     }
 }
