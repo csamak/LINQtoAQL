@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 
 namespace LINQToAQL.Deserialization.Json
 {
@@ -18,6 +18,7 @@ namespace LINQToAQL.Deserialization.Json
         public JsonResponseDeserializer()
         {
             _serializer.Converters.Add(new IntConverter());
+            _serializer.ContractResolver = new LinqToAqlContractResolver();
         }
 
         /// <summary>
@@ -30,6 +31,18 @@ namespace LINQToAQL.Deserialization.Json
         {
             using (var jsonTextReader = new JsonTextReader(reader))
                 return _serializer.Deserialize<IEnumerable<T>>(jsonTextReader);
+        }
+
+        /// <summary>
+        ///     Deserialize an AsterixDB API JSON response from a <see cref="TextReader"/>.
+        /// </summary>
+        /// <param name="reader">The <see cref="TextReader"/> from which to read the JSON response.</param>
+        /// <param name="type">The expected return type.</param>
+        /// <returns>The deserialized response.</returns>
+        public object DeserializeResponse(TextReader reader, Type type)
+        {
+            using (var jsonTextReader = new JsonTextReader(reader))
+                return _serializer.Deserialize(jsonTextReader, typeof (IEnumerable<>).MakeGenericType(type));
         }
     }
 }

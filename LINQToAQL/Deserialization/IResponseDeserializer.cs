@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace LINQToAQL.Deserialization
@@ -15,5 +16,13 @@ namespace LINQToAQL.Deserialization
         /// <param name="reader">The <see cref="TextReader"/> from which to read the response.</param>
         /// <returns>The deserialized response.</returns>
         IEnumerable<T> DeserializeResponse<T>(TextReader reader);
+
+        /// <summary>
+        ///     Deserialize an AsterixDB API response from a <see cref="TextReader"/>.
+        /// </summary>
+        /// <param name="reader">The <see cref="TextReader"/> from which to read the response.</param>
+        /// <param name="type">The expected return type.</param>
+        /// <returns>The deserialized response.</returns>
+        object DeserializeResponse(TextReader reader, Type type);
     }
 }

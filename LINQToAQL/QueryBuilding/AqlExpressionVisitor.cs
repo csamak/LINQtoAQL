@@ -247,7 +247,7 @@ namespace LINQToAQL.QueryBuilding
         {
             return
                 new NotSupportedException(
-                    $"The expression with type '{typeof (T)}' (method: {visitMethod}) is not supported.");
+                    $"The expression [{unhandledItem}] with type [{typeof (T)}] and method [{visitMethod}] is not supported.");
         }
     }
 }

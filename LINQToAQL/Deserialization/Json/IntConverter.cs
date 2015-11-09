@@ -38,7 +38,11 @@ namespace LINQToAQL.Deserialization.Json
                     return Convert.ChangeType(intProperty.Value.ToString(), objectType);
                 }
             }
-            return serializer.Deserialize(reader);
+            else if (reader.TokenType == JsonToken.Integer)
+                return Convert.ChangeType(JToken.Load(reader).Value<long>(), objectType);
+            else if (reader.TokenType == JsonToken.Null)
+                return null;
+            throw new NotSupportedException($"Could not read JSON [{reader.ReadAsString()}] as a numeric type");
         }
 
         public override bool CanConvert(Type objectType)
