@@ -63,6 +63,8 @@
     <Compile Include="Deserialization\Json\IntConverter.cs" />
     <Compile Include="Deserialization\Json\JsonResponseDeserializer.cs" />
     <Compile Include="Deserialization\Json\LinqToAqlContractResolver.cs" />
+    <Compile Include="Deserialization\Json\LineConverter.cs" />
+    <Compile Include="Deserialization\Json\PointConverter.cs" />
     <Compile Include="Extensions\AttributeExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueryBuilding\AqlExpressionVisitor.cs" />

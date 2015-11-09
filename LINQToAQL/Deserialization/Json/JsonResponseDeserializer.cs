@@ -18,6 +18,8 @@ namespace LINQToAQL.Deserialization.Json
         public JsonResponseDeserializer()
         {
             _serializer.Converters.Add(new IntConverter());
+            _serializer.Converters.Add(new PointConverter());
+            _serializer.Converters.Add(new LineConverter());
             _serializer.ContractResolver = new LinqToAqlContractResolver();
         }
 

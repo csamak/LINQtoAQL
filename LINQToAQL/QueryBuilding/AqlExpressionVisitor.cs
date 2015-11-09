@@ -164,6 +164,17 @@ namespace LINQToAQL.QueryBuilding
                     ((DateTime) expression.Value).ToString("yyyy-MM-ddTHH:mm:ss.fffzzz"));
             else if (expression.Type == typeof (string))
                 _aqlExpression.AppendFormat("\"{0}\"", expression.Value);
+            else if (expression.Type == typeof(Point))
+            {
+                var point = (Point) expression.Value;
+                _aqlExpression.Append($"create-point({point.X}, {point.Y})");
+            }
+            else if (expression.Type == typeof(Line))
+            {
+                var line = (Line) expression.Value;
+                _aqlExpression.Append(
+                    $"create-line(create-point({line.First.X}, {line.First.Y}), create-point({line.Second.X}, {line.Second.Y}))");
+            }
             else if (expression.Value is IEnumerable)
             {
                 _aqlExpression.Append("[");
