@@ -31,7 +31,7 @@ namespace LINQToAQL.QueryBuilding.AqlFunction.Numeric
 
         public override void Visit(MethodCallExpression expression)
         {
-            AqlFunction("numeric-round-half-to-even", expression.Arguments[0]);
+            AqlFunction("round-half-to-even", expression.Arguments[0]);
         }
     }
 }

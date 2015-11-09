@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -100,14 +99,14 @@ namespace LINQToAQL.QueryBuilding
             if (expression.Member.Name == "Key" &&
                 expression.Expression.Type.GetGenericTypeDefinition() == typeof (IGrouping<,>)) //grouping
             {
-                MemberExpression temp =
+                var temp =
                     GetKeySelector(
                         (SubQueryExpression)
                             ((MainFromClause)
                                 ((QuerySourceReferenceExpression) expression.Expression).ReferencedQuerySource)
                                 .FromExpression);
                 Visit(expression.Expression);
-                string field = temp.Expression.Type.GetMember(temp.Member.Name)
+                var field = temp.Expression.Type.GetMember(temp.Member.Name)
                     .First(m => m.MemberType == MemberTypes.Property || m.MemberType == MemberTypes.Field)
                     .GetAttributeValue((FieldAttribute f) => f.Name);
                 _aqlExpression.AppendFormat("[0].{0}", field ?? temp.Member.Name);
@@ -121,7 +120,7 @@ namespace LINQToAQL.QueryBuilding
             else
             {
                 Visit(expression.Expression);
-                string field = expression.Expression.Type.GetMember(expression.Member.Name)
+                var field = expression.Expression.Type.GetMember(expression.Member.Name)
                     .First(m => m.MemberType == MemberTypes.Property || m.MemberType == MemberTypes.Field)
                     .GetAttributeValue((FieldAttribute f) => f.Name);
                 _aqlExpression.AppendFormat(".{0}", field ?? expression.Member.Name);
@@ -129,10 +128,28 @@ namespace LINQToAQL.QueryBuilding
             return expression;
         }
 
+        protected override Expression VisitMemberInit(MemberInitExpression expression)
+        {
+            _aqlExpression.Append("{");
+            for (var i = 0; i < expression.Bindings.Count; i++)
+            {
+                var assignment = expression.Bindings[i] as MemberAssignment;
+                if (assignment == null)
+                    return base.VisitMemberInit(expression);
+                //what if it isn't named?
+                _aqlExpression.AppendFormat(" \"{0}\": ", assignment.Member.Name);
+                Visit(assignment.Expression);
+                if (i < expression.Bindings.Count - 1) //better way?
+                    _aqlExpression.Append(',');
+            }
+            _aqlExpression.Append(" }");
+            return expression;
+        }
+
         //TODO: should we search secondary from clauses?
         private MemberExpression GetKeySelector(SubQueryExpression exp)
         {
-            ResultOperatorBase temp = exp.QueryModel.ResultOperators.FirstOrDefault(r => r is GroupResultOperator);
+            var temp = exp.QueryModel.ResultOperators.FirstOrDefault(r => r is GroupResultOperator);
             return temp == null
                 ? GetKeySelector((SubQueryExpression) exp.QueryModel.MainFromClause.FromExpression)
                 : (MemberExpression) ((GroupResultOperator) temp).KeySelector;
@@ -143,15 +160,16 @@ namespace LINQToAQL.QueryBuilding
             //var namedParameter = _parameters.AddParameter(expression.Value);
             //_aqlExpression.AppendFormat(":{0}", namedParameter.Name);
             if (expression.Type == typeof (DateTime))
-                _aqlExpression.AppendFormat("datetime('{0}')", ((DateTime) expression.Value).ToString("O"));
+                _aqlExpression.AppendFormat("datetime('{0}')",
+                    ((DateTime) expression.Value).ToString("yyyy-MM-ddTHH:mm:ss.fffzzz"));
             else if (expression.Type == typeof (string))
                 _aqlExpression.AppendFormat("\"{0}\"", expression.Value);
             else if (expression.Value is IEnumerable)
             {
                 _aqlExpression.Append("[");
-                List<object> val = ((IEnumerable) expression.Value).Cast<object>().ToList();
+                var val = ((IEnumerable) expression.Value).Cast<object>().ToList();
                 Visit(Expression.Constant(val.First()));
-                foreach (object curr in ((IEnumerable) expression.Value).Cast<object>().Skip(1))
+                foreach (var curr in ((IEnumerable) expression.Value).Cast<object>().Skip(1))
                 {
                     _aqlExpression.Append(",");
                     Visit(Expression.Constant(curr));
@@ -168,7 +186,7 @@ namespace LINQToAQL.QueryBuilding
         protected override Expression VisitMethodCall(MethodCallExpression expression)
         {
             foreach (
-                AqlFunctionVisitor function in
+                var function in
                     _aqlFunctions.Functions.Where(function => function.IsVisitable(expression)))
             {
                 function.Visit(expression);
@@ -205,7 +223,7 @@ namespace LINQToAQL.QueryBuilding
             else
             {
                 _aqlExpression.Append("{");
-                for (int i = 0; i < expression.Arguments.Count; i++)
+                for (var i = 0; i < expression.Arguments.Count; i++)
                 {
                     //what if it isn't named?
                     _aqlExpression.AppendFormat(" \"{0}\": ", expression.Members[i].Name);
@@ -215,6 +233,18 @@ namespace LINQToAQL.QueryBuilding
                 }
                 _aqlExpression.Append(" }");
             }
+            return expression;
+        }
+
+        protected override Expression VisitNewArray(NewArrayExpression expression)
+        {
+            _aqlExpression.Append("[");
+            foreach (var curr in expression.Expressions)
+            {
+                Visit(curr);
+                _aqlExpression.Append(", ");
+            }
+            _aqlExpression.Append("]");
             return expression;
         }
 

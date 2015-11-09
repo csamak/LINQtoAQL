@@ -15,9 +15,10 @@ namespace LINQToAQL.QueryBuilding.AqlFunction.String
             return expression.Method.Equals(typeof (string).GetMethod("Substring", new[] {typeof (int), typeof (int)}));
         }
 
+        //AQL uses offset while C# uses index. Also, the length is relative in AQL while it is a final index in C#.
         public override void Visit(MethodCallExpression expression)
         {
-            AqlFunction("substring", expression.Object, expression.Arguments[0], expression.Arguments[1]);
+            AqlFunction("substring", expression.Object, Expression.MakeBinary(ExpressionType.Add, expression.Arguments[0], Expression.Constant(1)), expression.Arguments[1]);
         }
     }
 }

@@ -6,6 +6,8 @@ using NUnit.Framework;
 
 namespace LINQToAQL.Tests.Common.Queries
 {
+    //TODO: Order is currently enforced in result sets.
+    //When this is resolved, we can sometimes use the same queries in memory to get the QueryResults
     public class QueryTestCases
     {
         private readonly List<IEnumerable<Tuple<Type, TestQuery>>> _testQueries =

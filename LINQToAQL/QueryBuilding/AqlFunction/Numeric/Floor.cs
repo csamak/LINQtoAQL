@@ -18,7 +18,7 @@ namespace LINQToAQL.QueryBuilding.AqlFunction.Numeric
 
         public override void Visit(MethodCallExpression expression)
         {
-            AqlFunction("numeric-floor", expression.Arguments[0]);
+            AqlFunction("floor", expression.Arguments[0]);
         }
     }
 }

@@ -6,7 +6,7 @@ using Newtonsoft.Json.Serialization;
 
 namespace LINQToAQL.Deserialization.Json
 {
-    class LinqToAqlContractResolver : DefaultContractResolver
+    internal class LinqToAqlContractResolver : DefaultContractResolver
     {
         protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
         {

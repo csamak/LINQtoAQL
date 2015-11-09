@@ -18,7 +18,7 @@ namespace LINQToAQL.QueryBuilding.AqlFunction.Numeric
 
         public override void Visit(MethodCallExpression expression)
         {
-            AqlFunction("numeric-abs", expression.Arguments[0]);
+            AqlFunction("abs", expression.Arguments[0]);
         }
     }
 }

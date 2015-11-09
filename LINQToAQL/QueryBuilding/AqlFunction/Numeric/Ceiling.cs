@@ -18,7 +18,7 @@ namespace LINQToAQL.QueryBuilding.AqlFunction.Numeric
 
         public override void Visit(MethodCallExpression expression)
         {
-            AqlFunction("numeric-ceiling", expression.Arguments[0]);
+            AqlFunction("ceiling", expression.Arguments[0]);
         }
     }
 }

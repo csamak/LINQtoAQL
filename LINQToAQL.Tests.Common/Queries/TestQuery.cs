@@ -16,14 +16,14 @@ namespace LINQToAQL.Tests.Common.Queries
         public string Name { get; set; }
         public IQueryable<object> LinqQuery { get; set; }
         public string Aql { get; set; }
-        public string ApiResponse { get; set; }
+        public string CleanJsonApi { get; set; }
         public IEnumerable<object> QueryResult { get; set; }
 
         public TestCaseData QuerySynthesisTestData => new TestCaseData(LinqQuery).Returns(Aql).SetName(Name);
 
         public TestCaseData DeserializationTestData
             =>
-                new TestCaseData(ApiResponse, QueryResultType(QueryResult)).Returns(QueryResult)
+                new TestCaseData(CleanJsonApi, QueryResultType(QueryResult)).Returns(QueryResult)
                     .SetName(Name);
 
         public TestCaseData EndToEndTestData => new TestCaseData(LinqQuery).Returns(QueryResult).SetName(Name);

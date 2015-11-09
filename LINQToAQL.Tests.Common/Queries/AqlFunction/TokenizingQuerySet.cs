@@ -12,17 +12,17 @@ namespace LINQToAQL.Tests.Common.Queries.AqlFunction
             {
                 LinqQuery =
                     dv.TweetMessages.Where(t => t.SendTime >= new DateTime(2012, 1, 1))
-                        .Select(t => new {t.tweetid, wordTokens = t.MessageText.Split(' ')}),
+                        .Select(t => new TweetWordTokens {tweetid = t.tweetid, wordTokens = t.MessageText.Split(' ')}),
                 Aql =
-                    "for $t in dataset TweetMessages where ($t.send-time >= datetime('2012-01-01T00:00:00.0000000')) return { \"tweetid\": $t.tweetid, \"wordTokens\": word-tokens($t.message-text) }",
-                ApiResponse =
+                    $"for $t in dataset TweetMessages where ($t.send-time >= datetime('2012-01-01T00:00:00.000{new DateTime(2012, 1, 1).ToString("zzz")}')) return {{ \"tweetid\": $t.tweetid, \"wordTokens\": word-tokens($t.message-text) }}",
+                CleanJsonApi =
                     "[{\"tweetid\":\"9\",\"wordTokens\":[\"love\",\"verizon\",\"its\",\"voicemail\",\"service\",\"is\",\"awesome\"]}]",
                 QueryResult =
                     new[]
                     {
-                        new
+                        new TweetWordTokens
                         {
-                            tweetid = 10,
+                            tweetid = "9",
                             wordTokens = new[] {"love", "verizon", "its", "voicemail", "service", "is", "awesome"}
                         }
                     }
@@ -32,21 +32,49 @@ namespace LINQToAQL.Tests.Common.Queries.AqlFunction
                 LinqQuery =
                     dv.TweetMessages.Where(t => t.SendTime >= new DateTime(2012, 1, 1))
                         .Select(
-                            t => new {t.tweetid, wordTokens = t.MessageText.Split(new[] {" "}, StringSplitOptions.None)}),
+                            t =>
+                                new TweetWordTokens
+                                {
+                                    tweetid = t.tweetid,
+                                    wordTokens = t.MessageText.Split(new[] {" "}, StringSplitOptions.None)
+                                }),
                 Aql =
-                    "for $t in dataset TweetMessages where ($t.send-time >= datetime('2012-01-01T00:00:00.0000000')) return { \"tweetid\": $t.tweetid, \"wordTokens\": word-tokens($t.message-text) }",
-                ApiResponse =
+                    $"for $t in dataset TweetMessages where ($t.send-time >= datetime('2012-01-01T00:00:00.000{new DateTime(2012, 1, 1).ToString("zzz")}')) return {{ \"tweetid\": $t.tweetid, \"wordTokens\": word-tokens($t.message-text) }}",
+                CleanJsonApi =
                     "[{\"tweetid\":\"9\",\"wordTokens\":[\"love\",\"verizon\",\"its\",\"voicemail\",\"service\",\"is\",\"awesome\"]}]",
                 QueryResult =
                     new[]
                     {
-                        new
+                        new TweetWordTokens
                         {
-                            tweetid = 10,
+                            tweetid = "9",
                             wordTokens = new[] {"love", "verizon", "its", "voicemail", "service", "is", "awesome"}
                         }
                     }
             }
         };
+    }
+
+    public class TweetWordTokens
+    {
+        public string tweetid { get; set; }
+        public IEnumerable<string> wordTokens { get; set; } = new List<string>();
+
+        public override bool Equals(object obj)
+        {
+            var twt = obj as TweetWordTokens;
+            if (twt == null) return false;
+            return tweetid == twt.tweetid && wordTokens.SequenceEqual(twt.wordTokens);
+        }
+
+        public override string ToString()
+        {
+            return $"tweetid: {tweetid}, wordTokens: {string.Join(", ", wordTokens)}";
+        }
+
+        public override int GetHashCode()
+        {
+            return tweetid.GetHashCode() ^ wordTokens.GetHashCode();
+        }
     }
 }
