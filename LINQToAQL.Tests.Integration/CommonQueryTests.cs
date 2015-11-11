@@ -1,5 +1,5 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
+using LINQToAQL.Tests.Common;
 using LINQToAQL.Tests.Common.Model;
 using LINQToAQL.Tests.Common.Queries;
 using NUnit.Framework;
@@ -8,7 +8,7 @@ namespace LINQToAQL.Tests.Integration
 {
     internal class CommonQueryTests
     {
-        private readonly TinySocial _dv = new TinySocial(new Uri("http://localhost:19002"));
+        private readonly TinySocial _dv = TestEnvironment.Dataverse;
 
         [Test, TestCaseSource(typeof (QueryTestCases), nameof(QueryTestCases.EndToEndTestCases))]
         public object TestCommonQueries(IQueryable<object> linqQuery)

@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LINQToAQL", "LINQToAql\LINQToAQL.csproj", "{348A9215-DAF5-4D47-87DA-2A32DFAFCBDD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LINQToAQL", "LINQToAQL\LINQToAQL.csproj", "{348A9215-DAF5-4D47-87DA-2A32DFAFCBDD}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{E48A9BA9-283E-4B76-AACE-B2AB24B7276D}"
 	ProjectSection(SolutionItems) = preProject

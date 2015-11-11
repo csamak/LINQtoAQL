@@ -63,29 +63,30 @@ namespace LINQToAQL.Tests.Common.Properties {
         /// <summary>
         ///   Looks up a localized string similar to [
         ///   {
-        ///      &quot;message-id&quot;:6,
-        ///      &quot;author-id&quot;:2,
-        ///      &quot;in-response-to&quot;:1,
-        ///      &quot;sender-location&quot;:[
-        ///         31.5,
-        ///         75.56
-        ///      ],
-        ///      &quot;message&quot;:&quot; like t-mobile its platform is mind-blowing&quot;
+        ///      &quot;Id&quot;:6,
+        ///      &quot;AuthorId&quot;:2,
+        ///      &quot;InResponseTo&quot;:1,
+        ///      &quot;SenderLocation&quot;:{
+        ///         &quot;X&quot;:31.5,
+        ///         &quot;Y&quot;:75.56
+        ///      },
+        ///      &quot;Message&quot;:&quot; like t-mobile its platform is mind-blowing&quot;
         ///   },
         ///   {
-        ///      &quot;message-id&quot;:11,
-        ///      &quot;author-id&quot;:1,
-        ///      &quot;in-response-to&quot;:1,
-        ///      &quot;sender-location&quot;:[
-        ///         38.97,
-        ///         77.49
-        ///      ],
-        ///      &quot;message&quot;:&quot; can&apos;t stand at&amp;t its plan is terrible&quot;
+        ///      &quot;Id&quot;:11,
+        ///      &quot;AuthorId&quot;:1,
+        ///      &quot;InResponseTo&quot;:1,
+        ///      &quot;SenderLocation&quot;:{
+        ///         &quot;X&quot;:38.97,
+        ///         &quot;Y&quot;:77.49
+        ///      },
+        ///      &quot;Message&quot;:&quot; can&apos;t stand at&amp;t its plan is terrible&quot;
         ///   },
         ///   {
-        ///      &quot;message-id&quot;:12,
-        ///      &quot;author-id&quot;:10,
-        ///      &quot;in-response-to&quot;:6, [rest of string was truncated]&quot;;.
+        ///      &quot;Id&quot;:12,
+        ///      &quot;AuthorId&quot;:10,
+        ///      &quot;InResponseTo&quot;:6,
+        ///      &quot;SenderLoca [rest of string was truncated]&quot;;.
         /// </summary>
         public static string FacebookMessages {
             get {
@@ -99,8 +100,8 @@ namespace LINQToAQL.Tests.Common.Properties {
         ///      &quot;id&quot;:1,
         ///      &quot;alias&quot;:&quot;Margarita&quot;,
         ///      &quot;name&quot;:&quot;MargaritaStoddard&quot;,
-        ///      &quot;user-since&quot;:&quot;2012-08-20T10:10:00.000Z&quot;,
-        ///      &quot;friend-ids&quot;:[
+        ///      &quot;UserSince&quot;:&quot;2012-08-20T10:10:00.000Z&quot;,
+        ///      &quot;FriendIds&quot;:[
         ///         2,
         ///         3,
         ///         6,
@@ -111,8 +112,8 @@ namespace LINQToAQL.Tests.Common.Properties {
         ///      &quot;id&quot;:2,
         ///      &quot;alias&quot;:&quot;Isbel&quot;,
         ///      &quot;name&quot;:&quot;IsbelDull&quot;,
-        ///      &quot;user-since&quot;:&quot;2011-01-22T10:10:00.000Z&quot;,
-        ///      &quot;friend-ids&quot;:[
+        ///      &quot;UserSince&quot;:&quot;2011-01-22T10:10:00.000Z&quot;,
+        ///      &quot;FriendIds&quot;:[
         ///         1,
         ///         4
         ///      ]
@@ -121,7 +122,7 @@ namespace LINQToAQL.Tests.Common.Properties {
         ///      &quot;id&quot;:3,
         ///      &quot;alias&quot;:&quot;Emory&quot;,
         ///      &quot;name&quot;:&quot;EmoryUnk&quot;,
-        ///      &quot;user-since&quot;:&quot;2012-07-10T10 [rest of string was truncated]&quot;;.
+        ///      &quot;UserSince&quot;:&quot;2012-07-10T10:10:0 [rest of string was truncated]&quot;;.
         /// </summary>
         public static string FacebookUsers {
             get {
