@@ -23,25 +23,36 @@ namespace LINQToAQL
         public AqlQueryResultRetriever(Uri baseAddress, string dataverse)
         {
             if (baseAddress != null)
-                _client.BaseAddress = new Uri(baseAddress, "query");
+                _client.BaseAddress = baseAddress;
             _dataverse = dataverse;
         }
 
+        //TODO: Read results incrementally
         public IEnumerable<T> GetResults<T>(string query)
         {
-            using (var sr = new StreamReader(_client.GetStreamAsync(QueryString(query)).Result))
+            using (
+                var stream =
+                    _client.PostAsync("query", new StringContent(FullQuery(query)))
+                        .Result.Content.ReadAsStreamAsync()
+                        .Result)
+            using (var sr = new StreamReader(stream))
                 return _deserializer.DeserializeResponse<T>(sr);
         }
 
         public T GetScalar<T>(string query)
         {
-            using (var sr = new StreamReader(_client.GetStreamAsync(QueryString(query)).Result))
+            using (
+                var stream =
+                    _client.PostAsync("query", new StringContent(FullQuery(query)))
+                        .Result.Content.ReadAsStreamAsync()
+                        .Result)
+            using (var sr = new StreamReader(stream))
                 return _deserializer.DeserializeResponse<T>(sr).Single();
         }
 
-        private string QueryString(string query)
+        private string FullQuery(string query)
         {
-            return "?query=" + Uri.EscapeDataString($"use dataverse {_dataverse}; {query}");
+            return $"use dataverse {_dataverse}; {query}";
         }
     }
 }

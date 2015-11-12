@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using LINQToAQL.Tests.Common;
 using LINQToAQL.Tests.Common.Model;
 using LINQToAQL.Tests.Common.Queries;
@@ -10,7 +11,20 @@ namespace LINQToAQL.Tests.Integration
     {
         private readonly TinySocial _dv = TestEnvironment.Dataverse;
 
-        [Test, TestCaseSource(typeof (QueryTestCases), nameof(QueryTestCases.EndToEndTestCases))]
+        [TestFixtureSetUp]
+        public void SetupTinySocialData()
+        {
+            try
+            {
+                TestEnvironment.ExecuteAql(Properties.Resources.TinySocial);
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Could not set up TinySocial dataverse", e);
+            }
+        }
+
+        [Test, TestCaseSource(typeof(QueryTestCases), nameof(QueryTestCases.EndToEndTestCases))]
         public object TestCommonQueries(IQueryable<object> linqQuery)
         {
             return linqQuery.ToList(); //force remote evaluation
