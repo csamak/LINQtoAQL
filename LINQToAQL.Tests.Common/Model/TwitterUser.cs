@@ -30,5 +30,44 @@ namespace LINQToAQL.Tests.Common.Model
         public int statuses_count { get; set; }
         public string name { get; set; }
         public int followers_count { get; set; }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals((TwitterUser) obj);
+        }
+
+        private bool Equals(TwitterUser other)
+        {
+            return string.Equals(ScreenName, other.ScreenName) && string.Equals(lang, other.lang) &&
+                   friends_count == other.friends_count && statuses_count == other.statuses_count &&
+                   string.Equals(name, other.name) && followers_count == other.followers_count;
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = ScreenName?.GetHashCode() ?? 0;
+                hashCode = (hashCode*397) ^ (lang?.GetHashCode() ?? 0);
+                hashCode = (hashCode*397) ^ friends_count;
+                hashCode = (hashCode*397) ^ statuses_count;
+                hashCode = (hashCode*397) ^ (name?.GetHashCode() ?? 0);
+                hashCode = (hashCode*397) ^ followers_count;
+                return hashCode;
+            }
+        }
+
+        public static bool operator ==(TwitterUser left, TwitterUser right)
+        {
+            return Equals(left, right);
+        }
+
+        public static bool operator !=(TwitterUser left, TwitterUser right)
+        {
+            return !Equals(left, right);
+        }
     }
 }

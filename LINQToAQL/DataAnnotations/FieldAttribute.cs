@@ -26,7 +26,7 @@ namespace LINQToAQL.DataAnnotations
     public class FieldAttribute : Attribute
     {
         /// <summary>
-        ///     The field name to use when generating the AQL query
+        ///     The field name to use when generating an AQL query
         /// </summary>
         /// <returns>The dataset name</returns>
         public string Name { get; set; }

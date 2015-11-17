@@ -20,13 +20,13 @@ using System;
 namespace LINQToAQL.DataAnnotations
 {
     /// <summary>
-    ///     An <see cref="Attribute" /> that describes how to handle a field when generating AQL
+    ///     An <see cref="Attribute" /> that describes how to handle a dataset when generating AQL
     /// </summary>
     [AttributeUsage(AttributeTargets.Class)]
     public class DatasetAttribute : Attribute
     {
         /// <summary>
-        ///     The dataset name to use when generating the AQL query
+        ///     The dataset name to use when generating an AQL query
         /// </summary>
         /// <returns>The dataset name</returns>
         public string Name { get; set; }

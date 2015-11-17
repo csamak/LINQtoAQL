@@ -17,20 +17,13 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using LINQToAQL.DataAnnotations;
-using Newtonsoft.Json;
 
 namespace LINQToAQL.Tests.Common.Model
 {
     [Dataset(Name = "FacebookUsers")]
     public class FacebookUser
     {
-        public FacebookUser(Uri baseUri, string dataverse)
-        {
-            employment = new AqlQueryable<Employment>(baseUri, dataverse);
-        }
-
         public int id { get; set; }
         public string alias { get; set; }
         public string name { get; set; }
@@ -41,8 +34,7 @@ namespace LINQToAQL.Tests.Common.Model
         [Field(Name = "friend-ids")]
         public HashSet<int> FriendIds { get; set; } = new HashSet<int>(); //dupes allowed?
 
-        [JsonIgnore]
-        public IQueryable<Employment> employment { get; } //ordering?
+        public IEnumerable<Employment> employment { get; } = new HashSet<Employment>();
 
         public override bool Equals(object obj)
         {
@@ -74,7 +66,6 @@ namespace LINQToAQL.Tests.Common.Model
                 hash = hash*31 + alias.GetHashCode();
                 hash = hash*31 + name.GetHashCode();
                 hash = hash*31 + UserSince.GetHashCode();
-                hash = hash*31 + FriendIds.GetHashCode();
                 return hash;
             }
         }

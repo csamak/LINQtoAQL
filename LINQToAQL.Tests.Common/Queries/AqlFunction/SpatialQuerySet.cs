@@ -31,10 +31,8 @@ namespace LINQToAQL.Tests.Common.Queries.AqlFunction
                 LinqQuery = dv.FacebookUsers.Select(u => new Point(u.id + 1.3, 3.2)),
                 Aql = "for $u in dataset FacebookUsers return create-point(($u.id + 1.3), 3.2)",
                 CleanJsonApi =
-                    "[{\"point\":[7.3,3.2]},{\"point\":[2.3,3.2]},{\"point\":[3.3,3.2]},{\"point\":[5.3,3.2]},{\"point\":[9.3,3.2]},{\"point\":[10.3,3.2]},{\"point\":[11.3,3.2]},{\"point\":[4.3,3.2]},{\"point\":[6.3,3.2]},{\"point\":[8.3,3.2]}]",
-                QueryResult =
-                    TinySocialData.FacebookUsersByIds(6, 1, 2, 4, 8, 9, 10, 3, 5, 7)
-                        .Select(u => new Point(u.id + 1.3, 3.2))
+                    "[[7.3,3.2],[2.3,3.2],[3.3,3.2],[5.3,3.2],[9.3,3.2],[10.3,3.2],[11.3,3.2],[4.3,3.2],[6.3,3.2],[8.3,3.2]]",
+                QueryResult = TinySocialData.FacebookUsers.Select(u => new Point(u.id + 1.3, 3.2))
             },
             //TODO: handle conversion to double (make the forced conversion unecessary)
             new TestQuery("CreateLine")
@@ -44,9 +42,9 @@ namespace LINQToAQL.Tests.Common.Queries.AqlFunction
                         .Select(u => new Line(new Point(u.id + 1.3, 1.9), new Point(2.4, u.id + 1.4))),
                 Aql =
                     "for $u in dataset FacebookUsers where ($u.id = 3) return create-line(create-point(($u.id + 1.3), 1.9), create-point(2.4, ($u.id + 1.4)))",
-                CleanJsonApi = "[{\"line\":[{\"point\":[4.3,1.9]},{\"point\":[2.4,4.4]}]}]",
+                CleanJsonApi = "[[[4.3,1.9],[2.4,4.4]]]",
                 QueryResult =
-                    TinySocialData.FacebookUsersByIds(3)
+                    TinySocialData.FacebookUsers.Where(u => u.id == 3)
                         .Select(u => new Line(new Point(u.id + 1.3, 1.9), new Point(2.4, u.id + 1.4)))
             },
             new TestQuery("Distance")

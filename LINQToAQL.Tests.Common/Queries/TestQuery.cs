@@ -15,8 +15,6 @@
 // specific language governing permissions and limitations
 // under the License.
 
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
@@ -35,26 +33,13 @@ namespace LINQToAQL.Tests.Common.Queries
         public string Aql { get; set; }
         public string CleanJsonApi { get; set; }
         public IEnumerable<object> QueryResult { get; set; }
+        public bool EnforceOrder { get; set; }
 
         public TestCaseData QuerySynthesisTestData => new TestCaseData(LinqQuery).Returns(Aql).SetName(Name);
 
         public TestCaseData DeserializationTestData
-            =>
-                new TestCaseData(CleanJsonApi, QueryResultType(QueryResult)).Returns(QueryResult)
-                    .SetName(Name);
+            => new TestCaseData(CleanJsonApi, QueryResult, EnforceOrder).SetName(Name);
 
-        public TestCaseData EndToEndTestData => new TestCaseData(LinqQuery).Returns(QueryResult).SetName(Name);
-
-        private static Type QueryResultType(IEnumerable queryResult)
-        {
-            if (queryResult == null) return null;
-            var type = queryResult.GetType();
-            return type.IsArray
-                ? type.GetElementType()
-                : type.GetInterfaces()
-                    .Where(t => t.IsGenericType)
-                    .SingleOrDefault(t => t.GetGenericTypeDefinition() == typeof (IEnumerable<>))
-                    .GetGenericArguments()[0];
-        }
+        public TestCaseData EndToEndTestData => new TestCaseData(QueryResult, LinqQuery, EnforceOrder).SetName(Name);
     }
 }

@@ -16,11 +16,12 @@
 // under the License.
 
 using System.Collections.Generic;
+using System.Linq;
 
 namespace LINQToAQL.Similarity
 {
     /// <summary>
-    ///     A collection of edit distance functions that are remotely evaluated by AsterixDB in <see cref="LINQToAQL" />
+    ///     A collection of edit distance functions that are remotely evaluated by AsterixDB
     /// </summary>
     /// <remarks>
     ///     See http://asterixdb.ics.uci.edu/documentation/aql/functions.html for more information about individual
@@ -29,25 +30,23 @@ namespace LINQToAQL.Similarity
     public static class EditDistanceExtensions
     {
         /// <summary>
-        ///     Remotely calculates the edit distance between the two <see cref="System.String" />s
-        /// </summary>
-        /// <param name="str">The first <see cref="System.String" /></param>
-        /// <param name="other">The second <see cref="System.String" /></param>
-        /// <returns>The edit distance</returns>
-        public static int EditDistance(this string str, string other)
-        {
-            throw new AsterixRemoteOnlyException();
-        }
-
-        /// <summary>
-        ///     Remotely calculates the edit distance between two <c>OrderedList</c>s
+        ///     Remotely calculates the edit distance between two <see cref="string" />s or <c>OrderedList</c>s
         /// </summary>
         /// <typeparam name="T">The item type, comparable by AsterixDB</typeparam>
-        /// <param name="left">The first <c>OrderedList</c></param>
-        /// <param name="other">The second <c>OrderedList</c></param>
+        /// <param name="left">The first <c>OrderedList</c> or <see cref="string" /></param>
+        /// <param name="other">The second <c>OrderedList</c> or <see cref="string" /></param>
         /// <remarks>
-        ///     The <see cref="IEnumerable{T}" /> of <typeparamref name="T" /> is evaluated as the <c>OrderedList</c>
-        ///     referenced in the AQL documentation
+        ///     The <see cref="IEnumerable{T}" /> is evaluated as the string or homogenous <c>OrderedList</c> referenced in the AQL
+        ///     documentation.
+        ///     <para />
+        ///     There is no suitable replacement interface to enforce ordering without some inconvience.
+        ///     <see cref="IOrderedEnumerable{TElement}" /> exists, but is only used in limited cases.
+        ///     <para />
+        ///     Using this method with a local <see cref="IEnumerable{T}" /> that does not guarantee order (such as a
+        ///     <see cref="HashSet{T}" />) is allowed but may have inconsistent behavior.
+        ///     <para />
+        ///     Using this method with a remote <c>UnorderedList</c> instead of an <c>OrderedList</c> results in the remote error
+        ///     <c>AlgebricksException: Incompatible argument types given in edit distance: UNORDEREDLIST ORDEREDLIST</c>.
         /// </remarks>
         /// <returns>The edit distance</returns>
         public static int EditDistance<T>(this IEnumerable<T> left, IEnumerable<T> other)
@@ -55,31 +54,31 @@ namespace LINQToAQL.Similarity
             throw new AsterixRemoteOnlyException();
         }
 
-        /// <summary>
-        ///     Remotely checks whether the edit distance between two <see cref="System.String" />s is within a given threshold
-        /// </summary>
-        /// <param name="str">The first <see cref="System.String" /></param>
-        /// <param name="other">The second <see cref="System.String" /></param>
-        /// <param name="threshold">The threshold (maximum) edit distance for a <c>true</c> result</param>
-        /// <returns>Whether the edit distance was within the threshold</returns>
-        public static bool EditDistanceCheck(this string str, string other, int threshold)
-        {
-            throw new AsterixRemoteOnlyException();
-        }
+        //EditDistanceCheck support was intentionally removed since it is unnecessary with query rewrites.
 
         /// <summary>
-        ///     Remotely checks whether the edit distance between two <c>OrderedLists</c>s is within a given threshold
+        ///     Remotely checks whether one <see cref="string" /> or <c>OrderedList</c> contains another within a given threshold
         /// </summary>
         /// <typeparam name="T">The item type, comparable by AsterixDB</typeparam>
-        /// <param name="left">The first <c>OrderedList</c></param>
-        /// <param name="other">The second <c>OrderedList</c></param>
+        /// <param name="left">The first <c>OrderedList</c> or <see cref="string" /></param>
+        /// <param name="other">The second <c>OrderedList</c> or <see cref="string" /></param>
         /// <param name="threshold">The threshold (maximum) edit distance for a <c>true</c> result</param>
         /// <remarks>
-        ///     The <see cref="IEnumerable{T}" /> of <typeparamref name="T" /> is evaluated as the <c>OrderedList</c>
-        ///     referenced in the AQL documentation
+        ///     The <see cref="IEnumerable{T}" /> is evaluated as the string or homogenous <c>OrderedList</c> referenced in the AQL
+        ///     documentation.
+        ///     <para />
+        ///     There is no suitable replacement interface to enforce ordering without some inconvience.
+        ///     <see cref="IOrderedEnumerable{T}" /> exists, but is only used in limited cases.
+        ///     <para />
+        ///     Using this method with a local <see cref="IEnumerable{T}" /> that does not guarantee order (such as a
+        ///     <see cref="HashSet{T}" />) is allowed but may have inconsistent behavior.
+        ///     <para />
+        ///     Using this method with a remote <c>UnorderedList</c> instead of an <c>OrderedList</c> results in the remote error
+        ///     <c>AlgebricksException: Incompatible argument types given in edit distance: UNORDEREDLIST ORDEREDLIST</c>
         /// </remarks>
-        /// <returns>Whether the edit distance was within the threshold</returns>
-        public static bool EditDistanceCheck<T>(this IEnumerable<T> left, IEnumerable<T> other, int threshold)
+        /// <returns>An <see cref="EditDistanceContainsResult" /> representing the edit distance and whether it meets the threshold</returns>
+        public static EditDistanceContainsResult EditDistanceContains<T>(this IEnumerable<T> left, IEnumerable<T> other,
+            int threshold)
         {
             throw new AsterixRemoteOnlyException();
         }

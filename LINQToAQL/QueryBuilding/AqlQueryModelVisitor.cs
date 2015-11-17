@@ -155,7 +155,6 @@ namespace LINQToAQL.QueryBuilding
 
         public override void VisitJoinClause(JoinClause joinClause, QueryModel queryModel, int index)
         {
-            //TODO: index
             //cross join
             QueryBuilder.AddFromPart(joinClause.ItemName,
                 "dataset " + (joinClause.ItemType.GetAttributeValue((DatasetAttribute d) => d.Name) ??

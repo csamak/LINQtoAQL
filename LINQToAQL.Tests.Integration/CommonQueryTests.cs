@@ -16,6 +16,7 @@
 // under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using LINQToAQL.Tests.Common;
 using LINQToAQL.Tests.Common.Model;
@@ -29,7 +30,7 @@ namespace LINQToAQL.Tests.Integration
     {
         private readonly TinySocial _dv = TestEnvironment.Dataverse;
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void SetupTinySocialData()
         {
             try
@@ -43,9 +44,12 @@ namespace LINQToAQL.Tests.Integration
         }
 
         [Test, TestCaseSource(typeof (QueryTestCases), nameof(QueryTestCases.EndToEndTestCases))]
-        public object TestCommonQueries(IQueryable<object> linqQuery)
+        public void TestCommonQueries(IEnumerable<object> expected, IQueryable<object> linqQuery, bool enforceOrder)
         {
-            return linqQuery.ToList(); //force remote evaluation
+            if (enforceOrder)
+                CollectionAssert.AreEqual(expected, linqQuery);
+            else
+                CollectionAssert.AreEquivalent(expected, linqQuery);
         }
 
         [Test]

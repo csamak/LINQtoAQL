@@ -15,8 +15,11 @@
 // specific language governing permissions and limitations
 // under the License.
 
+using System.IO;
+using System.Linq;
 using LINQToAQL.Deserialization;
 using LINQToAQL.Deserialization.Json;
+using NUnit.Framework;
 
 namespace LINQToAQL.Tests.Unit.Deserialization.Json
 {
@@ -24,5 +27,12 @@ namespace LINQToAQL.Tests.Unit.Deserialization.Json
     {
         protected override IResponseDeserializer Deserializer
             => new JsonResponseDeserializer();
+
+        [Test]
+        public void IntInsideJsonObject()
+        {
+            Assert.AreEqual(37,
+                Deserializer.DeserializeResponse<int>(new StringReader("[ { \"int64\": 37 } ]")).Single());
+        }
     }
 }

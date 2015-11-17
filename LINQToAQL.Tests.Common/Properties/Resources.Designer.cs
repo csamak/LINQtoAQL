@@ -96,37 +96,65 @@ namespace LINQToAQL.Tests.Common.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to [
-        ///   {
-        ///      &quot;id&quot;:1,
-        ///      &quot;alias&quot;:&quot;Margarita&quot;,
-        ///      &quot;name&quot;:&quot;MargaritaStoddard&quot;,
-        ///      &quot;UserSince&quot;:&quot;2012-08-20T10:10:00.000Z&quot;,
-        ///      &quot;FriendIds&quot;:[
-        ///         2,
-        ///         3,
-        ///         6,
-        ///         10
-        ///      ]
-        ///   },
-        ///   {
-        ///      &quot;id&quot;:2,
-        ///      &quot;alias&quot;:&quot;Isbel&quot;,
-        ///      &quot;name&quot;:&quot;IsbelDull&quot;,
-        ///      &quot;UserSince&quot;:&quot;2011-01-22T10:10:00.000Z&quot;,
-        ///      &quot;FriendIds&quot;:[
-        ///         1,
-        ///         4
-        ///      ]
-        ///   },
-        ///   {
-        ///      &quot;id&quot;:3,
-        ///      &quot;alias&quot;:&quot;Emory&quot;,
-        ///      &quot;name&quot;:&quot;EmoryUnk&quot;,
-        ///      &quot;UserSince&quot;:&quot;2012-07-10T10:10:0 [rest of string was truncated]&quot;;.
+        ///    {
+        ///        &quot;id&quot;:1,
+        ///        &quot;alias&quot;:&quot;Margarita&quot;,
+        ///        &quot;name&quot;:&quot;MargaritaStoddard&quot;,
+        ///        &quot;UserSince&quot;:&quot;2012-08-20T10:10:00.000Z&quot;,
+        ///        &quot;FriendIds&quot;:[
+        ///            2,
+        ///            3,
+        ///            6,
+        ///            10
+        ///        ],
+        ///        &quot;employment&quot;:[
+        ///            {
+        ///                &quot;OrganizationName&quot;:&quot;Codetechno&quot;,
+        ///                &quot;StartDate&quot;:&quot;2006-08-06&quot;,
+        ///                &quot;EndDate&quot;:null
+        ///            }
+        ///        ]
+        ///    },
+        ///    {
+        ///        &quot;id&quot;:2,
+        ///        &quot;alias&quot;:&quot;Isbel&quot;,
+        ///        &quot;name&quot;:&quot;IsbelD [rest of string was truncated]&quot;;.
         /// </summary>
         public static string FacebookUsers {
             get {
                 return ResourceManager.GetString("FacebookUsers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to [
+        ///    {
+        ///        &quot;id&quot;:1,
+        ///        &quot;alias&quot;:&quot;Margarita&quot;,
+        ///        &quot;name&quot;:&quot;MargaritaStoddard&quot;,
+        ///        &quot;UserSince&quot;:&quot;2012-08-20T10:10:00.000Z&quot;,
+        ///        &quot;FriendIds&quot;:[
+        ///            2,
+        ///            3,
+        ///            6,
+        ///            10
+        ///        ],
+        ///        &quot;employment&quot;:[
+        ///            {
+        ///                &quot;OrganizationName&quot;:&quot;Codetechno&quot;,
+        ///                &quot;StartDate&quot;:&quot;2006-08-06&quot;,
+        ///                &quot;EndDate&quot;:null
+        ///            }
+        ///        ]
+        ///    },
+        ///    {
+        ///        &quot;id&quot;:2,
+        ///        &quot;alias&quot;:&quot;Isbel&quot;,
+        ///        &quot;name&quot;:&quot;IsbelD [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string TweetMessages {
+            get {
+                return ResourceManager.GetString("TweetMessages", resourceCulture);
             }
         }
     }

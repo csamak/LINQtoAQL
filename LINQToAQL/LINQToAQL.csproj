@@ -53,9 +53,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AqlQueryable.cs" />
+    <Compile Include="DataAnnotations\DataverseAttribute.cs" />
+    <Compile Include="Dataset.cs" />
     <Compile Include="AqlQueryExecutor.cs" />
     <Compile Include="AqlQueryResultRetriever.cs" />
+    <Compile Include="AsterixContext.cs" />
     <Compile Include="AsterixRemoteOnlyException.cs" />
     <Compile Include="DataAnnotations\DatasetAttribute.cs" />
     <Compile Include="DataAnnotations\FieldAttribute.cs" />
@@ -66,6 +68,7 @@
     <Compile Include="Deserialization\Json\LineConverter.cs" />
     <Compile Include="Deserialization\Json\PointConverter.cs" />
     <Compile Include="Extensions\AttributeExtensions.cs" />
+    <Compile Include="IDataset.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueryBuilding\AqlExpressionVisitor.cs" />
     <Compile Include="QueryBuilding\AqlFunction\AqlFunctions.cs" />
@@ -75,9 +78,7 @@
     <Compile Include="QueryBuilding\AqlFunction\Numeric\Ceiling.cs" />
     <Compile Include="QueryBuilding\AqlFunction\Numeric\Round.cs" />
     <Compile Include="QueryBuilding\AqlFunction\Similarity\EditDistance.cs" />
-    <Compile Include="QueryBuilding\AqlFunction\Similarity\EditDistanceCheck.cs" />
     <Compile Include="QueryBuilding\AqlFunction\Similarity\Jaccard.cs" />
-    <Compile Include="QueryBuilding\AqlFunction\Similarity\JaccardCheck.cs" />
     <Compile Include="QueryBuilding\AqlFunction\Spatial\SpatialDistance.cs" />
     <Compile Include="QueryBuilding\AqlFunction\String\CharIndex.cs" />
     <Compile Include="QueryBuilding\AqlFunction\String\Contains.cs" />
@@ -93,6 +94,7 @@
     <Compile Include="QueryBuilding\Operators.cs" />
     <Compile Include="QueryBuilding\ParameterCollection.cs" />
     <Compile Include="QueryBuilding\QueryBuilder.cs" />
+    <Compile Include="Similarity\EditDistanceContainsResult.cs" />
     <Compile Include="Similarity\EditDistanceExtensions.cs" />
     <Compile Include="Similarity\JaccardExtensions.cs" />
     <Compile Include="Spatial\Line.cs" />

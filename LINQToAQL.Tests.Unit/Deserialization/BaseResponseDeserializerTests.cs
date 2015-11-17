@@ -16,6 +16,7 @@
 // under the License.
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using LINQToAQL.Deserialization;
@@ -29,17 +30,28 @@ namespace LINQToAQL.Tests.Unit.Deserialization
         protected abstract IResponseDeserializer Deserializer { get; }
 
         [Test, TestCaseSource(typeof (QueryTestCases), nameof(QueryTestCases.DeserializationTestCases))]
-        public object TestCommonQueries(string apiResponse, Type expectedReturnType)
+        public void TestCommonQueries(string apiResponse, IEnumerable<object> expected, bool enforceOrder)
         {
+            IEnumerable<object> deserialized;
             using (var reader = new StringReader(apiResponse))
-                return Deserializer.DeserializeResponse(reader, expectedReturnType);
+                deserialized =
+                    (IEnumerable<object>) Deserializer.DeserializeResponse(reader, QueryResultType(expected));
+            if (enforceOrder)
+                CollectionAssert.AreEqual(expected, deserialized);
+            else
+                CollectionAssert.AreEquivalent(expected, deserialized);
         }
 
-        [Test]
-        public void IntInsideJsonObject()
+        private static Type QueryResultType(IEnumerable<object> queryResult)
         {
-            Assert.AreEqual(37,
-                Deserializer.DeserializeResponse<int>(new StringReader("[ { \"int64\": 37 } ]")).Single());
+            if (queryResult == null) return null;
+            var type = queryResult.GetType();
+            return type.IsArray
+                ? type.GetElementType()
+                : type.GetInterfaces()
+                    .Where(t => t.IsGenericType)
+                    .SingleOrDefault(t => t.GetGenericTypeDefinition() == typeof (IEnumerable<>))
+                    ?.GetGenericArguments()[0];
         }
     }
 }

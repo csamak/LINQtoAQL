@@ -17,6 +17,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using LINQToAQL.DataAnnotations;
 using LINQToAQL.Spatial;
 
@@ -41,5 +42,40 @@ namespace LINQToAQL.Tests.Common.Model
 
         [Field(Name = "message-text")]
         public string MessageText { get; set; }
+
+        public override bool Equals(object obj)
+        {
+            var tweet = obj as TweetMessage;
+            if (tweet == null) return false;
+            return tweetid == tweet.tweetid && user.Equals(tweet.user) && SenderLocation == tweet.SenderLocation && MessageText == tweet.MessageText && ReferredTopics.SequenceEqual(tweet.ReferredTopics);
+        }
+
+        public static bool operator ==(TweetMessage tweet1, TweetMessage tweet2)
+        {
+            if (ReferenceEquals(tweet1, tweet2))
+                return true;
+            if ((object)tweet1 == null || (object)tweet2 == null)
+                return false;
+            return tweet1.Equals(tweet2);
+        }
+
+        public static bool operator !=(TweetMessage tweet1, TweetMessage tweet2)
+        {
+            return !(tweet1 == tweet2);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hash = 17;
+                hash = hash * 31 + tweetid.GetHashCode();
+                hash = hash * 31 + user.GetHashCode();
+                hash = hash * 31 + SenderLocation.GetHashCode();
+                hash = hash * 31 + SendTime.GetHashCode();
+                hash = hash * 31 + MessageText.GetHashCode();
+                return hash;
+            }
+        }
     }
 }

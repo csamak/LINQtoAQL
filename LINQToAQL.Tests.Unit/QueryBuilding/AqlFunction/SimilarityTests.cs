@@ -27,9 +27,8 @@ namespace LINQToAQL.Tests.Unit.QueryBuilding.AqlFunction
         public void OnlyAllowsRemoteExecution()
         {
             OnlyRemote(() => "".EditDistance("other"));
-            OnlyRemote(() => "".EditDistanceCheck("other", 32));
+            OnlyRemote(() => "".EditDistanceContains("ot", 3));
             OnlyRemote(() => new[] {1, 5, 9}.Jaccard(new[] {1, 7, 9}));
-            OnlyRemote(() => new[] {1, 5, 9}.JaccardCheck(new[] {1, 7, 9}, 0.6));
         }
 
         private static void OnlyRemote(Action x)

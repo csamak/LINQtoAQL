@@ -41,8 +41,7 @@ namespace LINQToAQL.QueryBuilding.AqlFunction
                         typeof (Abs), typeof (Ceiling), typeof (Floor), typeof (Round), typeof (CharIndex),
                         typeof (Contains), typeof (EndsWith), typeof (Join), typeof (Lowercase), typeof (StartsWith),
                         typeof (Substring), typeof (SubstringWithLength), typeof (ToCodepoint), typeof (EditDistance),
-                        typeof (EditDistanceCheck), typeof (Jaccard), typeof (JaccardCheck), typeof (WordTokens),
-                        typeof (SpatialDistance)
+                        typeof (Jaccard), typeof (WordTokens), typeof (SpatialDistance)
                     }.Select(
                         t => Activator.CreateInstance(t, aqlExpression, visitor))
                         .Cast<AqlFunctionVisitor>()

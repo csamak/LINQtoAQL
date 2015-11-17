@@ -35,28 +35,24 @@ namespace LINQToAQL.Deserialization.Json
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue,
             JsonSerializer serializer)
         {
-            if (reader.TokenType == JsonToken.StartObject)
+            if (reader.TokenType == JsonToken.StartArray)
             {
-                var jsonObject = JObject.Load(reader);
-                JProperty prop;
-                try
-                {
-                    prop = jsonObject.Properties().Single();
-                }
-                catch (Exception e)
-                {
-                    throw new Exception("Expected a point type but received: " + jsonObject, e);
-                }
-                if ("line" == prop.Name && prop.Value.Type == JTokenType.Array)
-                {
-                    var array = (JArray) prop.Value;
-                    return new Line(serializer.Deserialize<Point>(new JTokenReader(array[0])),
-                        serializer.Deserialize<Point>(new JTokenReader(array[1])));
-                }
+                var array = JArray.Load(reader);
+                if (array.Count == 2)
+                    try
+                    {
+                        //creating new readers shouldn't be necessary; why doesn't it work using the same reader?
+                        return new Line(serializer.Deserialize<Point>(new JTokenReader(array[0])),
+                            serializer.Deserialize<Point>(new JTokenReader(array[1])));
+                    }
+                    catch (Exception)
+                    {
+                        throw new Exception("Expected a line type but received: "); // + array, e);
+                    }
             }
             else if (reader.TokenType == JsonToken.Null)
                 return null;
-            throw new NotSupportedException($"Could not read JSON [{reader.ReadAsString()}] as a numeric type");
+            throw new NotSupportedException($"Could not read JSON [{reader.ReadAsString()}] as a line type");
         }
 
         public override bool CanConvert(Type objectType)

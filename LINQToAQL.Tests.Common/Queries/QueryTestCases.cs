@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using LINQToAQL.Tests.Common.Model.Data;
 using LINQToAQL.Tests.Common.Queries.AqlFunction;
 using NUnit.Framework;
 
@@ -27,16 +28,16 @@ namespace LINQToAQL.Tests.Common.Queries
     //When this is resolved, we can sometimes use the same queries in memory to get the QueryResults
     public class QueryTestCases
     {
-        private readonly List<IEnumerable<Tuple<Type, TestQuery>>> _testQueries =
+        private static readonly List<IEnumerable<Tuple<Type, TestQuery>>> _testQueries =
             new List<IEnumerable<Tuple<Type, TestQuery>>>();
 
-        public QueryTestCases()
+        static QueryTestCases() 
         {
             RegisterQuerySets(new AdbTutorialQuerySet(), new NumericQuerySet(), new TokenizingQuerySet(),
                 new StringQuerySet(), new SimilarityQuerySet(), new SpatialQuerySet());
         }
 
-        public IEnumerable<TestCaseData> QuerySynthesisTestCases
+        public static IEnumerable<TestCaseData> QuerySynthesisTestCases
         {
             get
             {
@@ -45,14 +46,14 @@ namespace LINQToAQL.Tests.Common.Queries
                         _testQueries.SelectMany(x => x)
                             .Select(t => t.Item2.QuerySynthesisTestData.SetCategory(t.Item1.Name)))
                 {
-                    if (query.Arguments.All(a => a == null) || query.Result == null)
+                    if (query.Arguments.All(a => a == null) || query.ExpectedResult == null)
                         query.Ignore("Query test case not complete");
                     yield return query;
                 }
             }
         }
 
-        public IEnumerable<TestCaseData> DeserializationTestCases
+        public static IEnumerable<TestCaseData> DeserializationTestCases
         {
             get
             {
@@ -61,14 +62,14 @@ namespace LINQToAQL.Tests.Common.Queries
                         _testQueries.SelectMany(x => x)
                             .Select(t => t.Item2.DeserializationTestData.SetCategory(t.Item1.Name)))
                 {
-                    if (query.Arguments.All(a => a == null) || query.Result == null)
+                    if (query.Arguments.Any(a => a == null))
                         query.Ignore("Query test case not complete");
                     yield return query;
                 }
             }
         }
 
-        public IEnumerable<TestCaseData> EndToEndTestCases
+        public static IEnumerable<TestCaseData> EndToEndTestCases
         {
             get
             {
@@ -76,14 +77,14 @@ namespace LINQToAQL.Tests.Common.Queries
                     var query in
                         _testQueries.SelectMany(x => x).Select(t => t.Item2.EndToEndTestData.SetCategory(t.Item1.Name)))
                 {
-                    if (query.Arguments.All(a => a == null) || query.Result == null)
+                    if (query.Arguments.Any(a => a == null))
                         query.Ignore("Query test case not complete");
                     yield return query;
                 }
             }
         }
 
-        public void RegisterQuerySets(params QuerySet[] querySets)
+        public static void RegisterQuerySets(params QuerySet[] querySets)
         {
             foreach (var querySet in querySets)
                 _testQueries.Add(querySet.Queries.Select(t => Tuple.Create(querySet.GetType(), t)));

@@ -27,24 +27,31 @@ namespace LINQToAQL
     ///     Evaluates queries remotely on an instance of AsterixDB.
     /// </summary>
     /// <typeparam name="T">The result type of the query</typeparam>
-    public class AqlQueryable<T> : QueryableBase<T>
+    public class Dataset<T> : QueryableBase<T>, IDataset<T>
     {
         /// <summary>
-        ///     Creates an <see cref="AqlQueryable{T}" /> with a dataverse and AsterixDB connection information.
+        ///     Creates a <see cref="Dataset{T}" /> with AsterixDB connection information and a dataverse.
         /// </summary>
-        /// <param name="baseUri"></param>
-        /// <param name="dataverse"></param>
-        public AqlQueryable(Uri baseUri, string dataverse) :
+        /// <param name="baseUri">The URI to use when connecting to AsterixDB (e.g. <c>http://localhost:19002/</c>)</param>
+        /// <param name="dataverse">The dataverse to use when querying this dataset</param>
+        /// <param name="context">The <see cref="AsterixContext" /> associated with the <see cref="Dataset{T}" /></param>
+        public Dataset(Uri baseUri, string dataverse, AsterixContext context = null) :
             base(QueryParser.CreateDefault(), new AqlQueryExecutor(baseUri, dataverse))
         {
+            Context = context;
         }
 
         //TODO: Support an HttpClient overload, or the equivalent to allow specifying things like proxies
 
         //called by LINQ
         /// <inheritdoc />
-        public AqlQueryable(IQueryProvider provider, Expression expression) : base(provider, expression)
+        public Dataset(IQueryProvider provider, Expression expression) : base(provider, expression)
         {
         }
+
+        /// <summary>
+        ///     The <see cref="AsterixContext" /> associated with the <see cref="Dataset{T}" />
+        /// </summary>
+        public AsterixContext Context { get; }
     }
 }

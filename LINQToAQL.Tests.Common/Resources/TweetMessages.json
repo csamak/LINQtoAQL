@@ -1,0 +1,254 @@
+[
+   {
+      "tweetid":"11",
+      "user":{
+         "ScreenName":"NilaMilliron_tw",
+         "lang":"en",
+         "friends_count":445,
+         "statuses_count":164,
+         "name":"Nila Milliron",
+         "followers_count":22649
+      },
+      "SenderLocation":{
+         "X":37.59,
+         "Y":68.42
+      },
+      "SendTime":"2008-03-09T10:10:00.000Z",
+      "ReferredTopics":[
+         "iphone",
+         "platform"
+      ],
+      "MessageText":" can't stand iphone its platform is terrible"
+   },
+   {
+      "tweetid":"2",
+      "user":{
+         "ScreenName":"ColineGeyer@63",
+         "lang":"en",
+         "friends_count":121,
+         "statuses_count":362,
+         "name":"Coline Geyer",
+         "followers_count":17159
+      },
+      "SenderLocation":{
+         "X":32.84,
+         "Y":67.14
+      },
+      "SendTime":"2010-05-13T10:10:00.000Z",
+      "ReferredTopics":[
+         "verizon",
+         "shortcut-menu"
+      ],
+      "MessageText":" like verizon its shortcut-menu is awesome:)"
+   },
+   {
+      "tweetid":"4",
+      "user":{
+         "ScreenName":"NathanGiesen@211",
+         "lang":"en",
+         "friends_count":39339,
+         "statuses_count":473,
+         "name":"Nathan Giesen",
+         "followers_count":49416
+      },
+      "SenderLocation":{
+         "X":39.28,
+         "Y":70.48
+      },
+      "SendTime":"2011-12-26T10:10:00.000Z",
+      "ReferredTopics":[
+         "sprint",
+         "voice-command"
+      ],
+      "MessageText":" like sprint the voice-command is mind-blowing:)"
+   },
+   {
+      "tweetid":"9",
+      "user":{
+         "ScreenName":"NathanGiesen@211",
+         "lang":"en",
+         "friends_count":39339,
+         "statuses_count":473,
+         "name":"Nathan Giesen",
+         "followers_count":49416
+      },
+      "SenderLocation":{
+         "X":36.86,
+         "Y":74.62
+      },
+      "SendTime":"2012-07-21T10:10:00.000Z",
+      "ReferredTopics":[
+         "verizon",
+         "voicemail-service"
+      ],
+      "MessageText":" love verizon its voicemail-service is awesome"
+   },
+   {
+      "tweetid":"1",
+      "user":{
+         "ScreenName":"NathanGiesen@211",
+         "lang":"en",
+         "friends_count":39339,
+         "statuses_count":473,
+         "name":"Nathan Giesen",
+         "followers_count":49416
+      },
+      "SenderLocation":{
+         "X":47.44,
+         "Y":80.65
+      },
+      "SendTime":"2008-04-26T10:10:00.000Z",
+      "ReferredTopics":[
+         "t-mobile",
+         "customization"
+      ],
+      "MessageText":" love t-mobile its customization is good:)"
+   },
+   {
+      "tweetid":"5",
+      "user":{
+         "ScreenName":"NathanGiesen@211",
+         "lang":"en",
+         "friends_count":39339,
+         "statuses_count":473,
+         "name":"Nathan Giesen",
+         "followers_count":49416
+      },
+      "SenderLocation":{
+         "X":40.09,
+         "Y":92.69
+      },
+      "SendTime":"2006-08-04T10:10:00.000Z",
+      "ReferredTopics":[
+         "motorola",
+         "speed"
+      ],
+      "MessageText":" can't stand motorola its speed is terrible:("
+   },
+   {
+      "tweetid":"3",
+      "user":{
+         "ScreenName":"NathanGiesen@211",
+         "lang":"en",
+         "friends_count":39339,
+         "statuses_count":473,
+         "name":"Nathan Giesen",
+         "followers_count":49416
+      },
+      "SenderLocation":{
+         "X":29.72,
+         "Y":75.8
+      },
+      "SendTime":"2006-11-04T10:10:00.000Z",
+      "ReferredTopics":[
+         "motorola",
+         "speed"
+      ],
+      "MessageText":" like motorola the speed is good:)"
+   },
+   {
+      "tweetid":"6",
+      "user":{
+         "ScreenName":"ColineGeyer@63",
+         "lang":"en",
+         "friends_count":121,
+         "statuses_count":362,
+         "name":"Coline Geyer",
+         "followers_count":17159
+      },
+      "SenderLocation":{
+         "X":47.51,
+         "Y":83.99
+      },
+      "SendTime":"2010-05-07T10:10:00.000Z",
+      "ReferredTopics":[
+         "iphone",
+         "voice-clarity"
+      ],
+      "MessageText":" like iphone the voice-clarity is good:)"
+   },
+   {
+      "tweetid":"7",
+      "user":{
+         "ScreenName":"ChangEwing_573",
+         "lang":"en",
+         "friends_count":182,
+         "statuses_count":394,
+         "name":"Chang Ewing",
+         "followers_count":32136
+      },
+      "SenderLocation":{
+         "X":36.21,
+         "Y":72.6
+      },
+      "SendTime":"2011-08-25T10:10:00.000Z",
+      "ReferredTopics":[
+         "samsung",
+         "platform"
+      ],
+      "MessageText":" like samsung the platform is good"
+   },
+   {
+      "tweetid":"10",
+      "user":{
+         "ScreenName":"ColineGeyer@63",
+         "lang":"en",
+         "friends_count":121,
+         "statuses_count":362,
+         "name":"Coline Geyer",
+         "followers_count":17159
+      },
+      "SenderLocation":{
+         "X":29.15,
+         "Y":76.53
+      },
+      "SendTime":"2008-01-26T10:10:00.000Z",
+      "ReferredTopics":[
+         "verizon",
+         "voice-clarity"
+      ],
+      "MessageText":" hate verizon its voice-clarity is OMG:("
+   },
+   {
+      "tweetid":"12",
+      "user":{
+         "ScreenName":"OliJackson_512",
+         "lang":"en",
+         "friends_count":445,
+         "statuses_count":164,
+         "name":"Oli Jackson",
+         "followers_count":22649
+      },
+      "SenderLocation":{
+         "X":24.82,
+         "Y":94.63
+      },
+      "SendTime":"2010-02-13T10:10:00.000Z",
+      "ReferredTopics":[
+         "samsung",
+         "voice-command"
+      ],
+      "MessageText":" like samsung the voice-command is amazing:)"
+   },
+   {
+      "tweetid":"8",
+      "user":{
+         "ScreenName":"NathanGiesen@211",
+         "lang":"en",
+         "friends_count":39339,
+         "statuses_count":473,
+         "name":"Nathan Giesen",
+         "followers_count":49416
+      },
+      "SenderLocation":{
+         "X":46.05,
+         "Y":93.34
+      },
+      "SendTime":"2005-10-14T10:10:00.000Z",
+      "ReferredTopics":[
+         "t-mobile",
+         "shortcut-menu"
+      ],
+      "MessageText":" like t-mobile the shortcut-menu is awesome:)"
+   }
+]

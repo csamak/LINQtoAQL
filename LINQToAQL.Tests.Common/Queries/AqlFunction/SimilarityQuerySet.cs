@@ -18,6 +18,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using LINQToAQL.Similarity;
+using LINQToAQL.Tests.Common.Model.Data;
 
 namespace LINQToAQL.Tests.Common.Queries.AqlFunction
 {
@@ -28,40 +29,18 @@ namespace LINQToAQL.Tests.Common.Queries.AqlFunction
             //TODO: Query results in AsterixDB error
             new TestQuery("EditDistance")
             {
-                LinqQuery = dv.FacebookUsers.Where(u => u.FriendIds.EditDistance(new[] {1, 5, 9}) <= 2),
-                Aql = "for $u in dataset FacebookUsers where (edit-distance($u.friend-ids, [1,5,9]) <= 2) return $u",
-                CleanJsonApi = null,
-                QueryResult = null
+                LinqQuery = dv.FacebookUsers.Where(u => u.name.EditDistance("Suzanna Tilson") <= 2),
+                Aql = "for $u in dataset FacebookUsers where (edit-distance($u.name, \"Suzanna Tilson\") <= 2) return $u",
+                CleanJsonApi = "[{\"id\":7,\"alias\":\"Suzanna\",\"name\":\"SuzannaTillson\",\"user-since\":\"2012-08-07T10:10:00.000Z\",\"friend-ids\":[6],\"employment\":[{\"organization-name\":\"Labzatron\",\"start-date\":\"2011-04-19\",\"end-date\":null}]}]",
+                QueryResult = TinySocialData.FacebookUsers.Where(u => u.id == 7)
             },
-            //TODO: Query results in AsterixDB error
-            new TestQuery("EditDistanceCheck")
-            {
-                LinqQuery = dv.FacebookUsers.Where(u => u.name.EditDistanceCheck("Suzanna Tilson", 2)),
-                Aql =
-                    "for $u in dataset FacebookUsers where edit-distance-check($u.name, \"Suzanna Tilson\", 2) return $u",
-                CleanJsonApi = null,
-                QueryResult = null
-            },
-            //Weird that although this is a sample query, all have similarity of 0.0.
             new TestQuery("Jaccard")
             {
                 LinqQuery = dv.FacebookUsers.Where(u => u.FriendIds.Jaccard(new[] {1, 5, 9}) >= 0.6),
                 Aql =
                     "for $u in dataset FacebookUsers where (similarity-jaccard($u.friend-ids, [1,5,9]) >= 0.6) return $u",
-                CleanJsonApi = "[]",
-                QueryResult = Enumerable.Empty<object>()
-            },
-            new TestQuery("JaccardCheck")
-            {
-                LinqQuery =
-                    from u in dv.FacebookUsers
-                    let sim = u.FriendIds.JaccardCheck(new[] {1, 5, 9}, 0.6)
-                    where (bool) sim[0]
-                    select sim[1],
-                Aql =
-                    "for $u in dataset FacebookUsers where similarity-jaccard-check($u.friend-ids, [1,5,9], 0.6)[0] return similarity-jaccard-check($u.friend-ids, [1,5,9], 0.6)[1]",
-                CleanJsonApi = "[]",
-                QueryResult = Enumerable.Empty<object>()
+                CleanJsonApi = "[{\"id\":10,\"alias\":\"Bram\",\"name\":\"BramHatch\",\"user-since\":\"2010-10-16T10:10:00.000Z\",\"friend-ids\":[1,5,9],\"employment\":[{\"organization-name\":\"physcane\",\"start-date\":\"2007-06-05\",\"end-date\":\"2011-11-05\"}]},{\"id\":3,\"alias\":\"Emory\",\"name\":\"EmoryUnk\",\"user-since\":\"2012-07-10T10:10:00.000Z\",\"friend-ids\":[1,5,8,9],\"employment\":[{\"organization-name\":\"geomedia\",\"start-date\":\"2010-06-17\",\"end-date\":\"2010-01-26\"}]}]",
+                QueryResult = TinySocialData.FacebookUsers.Where(u => new[] {10, 3}.Contains(u.id))
             }
         };
     }
