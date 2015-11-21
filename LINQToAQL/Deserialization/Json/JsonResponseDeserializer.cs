@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Newtonsoft.Json;
 
 namespace LINQToAQL.Deserialization.Json
@@ -48,8 +49,7 @@ namespace LINQToAQL.Deserialization.Json
         /// <returns>The deserialized response.</returns>
         public IEnumerable<T> DeserializeResponse<T>(TextReader reader)
         {
-            using (var jsonTextReader = new JsonTextReader(reader))
-                return _serializer.Deserialize<IEnumerable<T>>(jsonTextReader);
+            return DeserializeArray(reader, typeof (T)).Select(curr => (T) curr);
         }
 
         /// <summary>
@@ -58,10 +58,25 @@ namespace LINQToAQL.Deserialization.Json
         /// <param name="reader">The <see cref="TextReader" /> from which to read the JSON response.</param>
         /// <param name="type">The expected return type.</param>
         /// <returns>The deserialized response.</returns>
-        public object DeserializeResponse(TextReader reader, Type type)
+        public IEnumerable<object> DeserializeResponse(TextReader reader, Type type)
         {
-            using (var jsonTextReader = new JsonTextReader(reader))
-                return _serializer.Deserialize(jsonTextReader, typeof (IEnumerable<>).MakeGenericType(type));
+            return DeserializeArray(reader, type).Select(curr => curr);
+        }
+
+        //This forces no caching (should there be some caching?)
+        private IEnumerable<object> DeserializeArray(TextReader textReader, Type type)
+        {
+            using (var reader = new JsonTextReader(textReader))
+            {
+                if (!reader.Read() || reader.TokenType != JsonToken.StartArray)
+                    throw new Exception("Expected the beginning of a JSON array but was " +
+                                        Enum.GetName(typeof (JsonToken), reader.TokenType));
+                while (reader.Read())
+                {
+                    if (reader.TokenType == JsonToken.EndArray) break;
+                    yield return _serializer.Deserialize(reader, type);
+                }
+            }
         }
     }
 }

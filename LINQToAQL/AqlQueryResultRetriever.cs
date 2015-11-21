@@ -53,7 +53,8 @@ namespace LINQToAQL
                         .Result.Content.ReadAsStreamAsync()
                         .Result)
             using (var sr = new StreamReader(stream))
-                return _deserializer.DeserializeResponse<T>(sr);
+                foreach (T curr in _deserializer.DeserializeResponse<T>(sr))
+                    yield return curr; //so the stream isn't disposed until we're done
         }
 
         public T GetScalar<T>(string query)

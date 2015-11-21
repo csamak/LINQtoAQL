@@ -32,14 +32,14 @@ namespace LINQToAQL.Tests.Unit.Deserialization
         [Test, TestCaseSource(typeof (QueryTestCases), nameof(QueryTestCases.DeserializationTestCases))]
         public void TestCommonQueries(string apiResponse, IEnumerable<object> expected, bool enforceOrder)
         {
-            IEnumerable<object> deserialized;
             using (var reader = new StringReader(apiResponse))
-                deserialized =
-                    (IEnumerable<object>) Deserializer.DeserializeResponse(reader, QueryResultType(expected));
-            if (enforceOrder)
-                CollectionAssert.AreEqual(expected, deserialized);
-            else
-                CollectionAssert.AreEquivalent(expected, deserialized);
+            {
+                var deserialized = Deserializer.DeserializeResponse(reader, QueryResultType(expected));
+                if (enforceOrder)
+                    CollectionAssert.AreEqual(expected, deserialized);
+                else
+                    CollectionAssert.AreEquivalent(expected, deserialized);
+            }
         }
 
         private static Type QueryResultType(IEnumerable<object> queryResult)

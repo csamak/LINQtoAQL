@@ -40,6 +40,6 @@ namespace LINQToAQL.Deserialization
         /// <param name="reader">The <see cref="TextReader" /> from which to read the response.</param>
         /// <param name="type">The expected return type.</param>
         /// <returns>The deserialized response.</returns>
-        object DeserializeResponse(TextReader reader, Type type);
+        IEnumerable<object> DeserializeResponse(TextReader reader, Type type);
     }
 }
