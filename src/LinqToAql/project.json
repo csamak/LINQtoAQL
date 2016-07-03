@@ -1,0 +1,27 @@
+{
+    "version": "0.1.0-*",
+    "title": "LINQ to AQL",
+    "description": "LINQ to AQL generates AQL expressions from LINQ expressions and executes them against an AsterixDB endpoint.",
+
+    "packOptions": {
+        "summary": "LINQ to AQL is a AsterixDB client for .NET. It generates AQL expressions from LINQ expressions and executes them against an AsterixDB endpoint.",
+        "tags": [ "asterixdb", "linq", "aql" ],
+        "licenseUrl": "http://www.apache.org/licenses/LICENSE-2.0",
+        "projectUrl": "http://asterixdb.apache.org/"
+    },
+
+    "dependencies": {
+        "NETStandard.Library": "1.6.0",
+        "Newtonsoft.Json": "9.0.1",
+        "Remotion.Linq": "2.1.1"
+    },
+
+    "buildOptions": {
+        "xmlDoc": true,
+        "optimize": true
+    },
+
+    "frameworks": {
+        "netstandard1.6": {},
+    }
+}

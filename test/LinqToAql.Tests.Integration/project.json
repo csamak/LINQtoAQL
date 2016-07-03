@@ -1,0 +1,30 @@
+﻿{
+    "version": "1.0.0-*",
+
+    "dependencies": {
+        "LinqToAql": { "target": "project" },
+        "LinqToAql.Tests.Common": { "target": "project" },
+        "dotnet-test-nunit": "3.4.0-beta-1",
+        "NETStandard.Library": "1.6.0",
+        "NUnit": "3.4.1"
+    },
+
+    "testRunner": "nunit",
+
+    //netcore for nunit. Later nunit will support netstandard.
+    "frameworks": {
+        "netcoreapp1.0": {
+            "imports": [ "dotnet5.6" ],
+            "dependencies": {
+                "Microsoft.NETCore.App": {
+                    "version": "1.0.0",
+                    "type": "platform"
+                }
+            }
+        }
+    },
+
+    "buildOptions": {
+        "embed": "Resources/**"
+    }
+}

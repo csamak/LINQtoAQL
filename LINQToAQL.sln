@@ -1,22 +1,24 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LINQToAQL", "LINQToAQL\LINQToAQL.csproj", "{348A9215-DAF5-4D47-87DA-2A32DFAFCBDD}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{5690CA52-0CA5-4AD7-9E82-B13D51F5DA21}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{E48A9BA9-283E-4B76-AACE-B2AB24B7276D}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7133C5B4-AD4A-4F91-A1EE-2D04494DC602}"
 	ProjectSection(SolutionItems) = preProject
-		.nuget\NuGet.Config = .nuget\NuGet.Config
-		.nuget\NuGet.exe = .nuget\NuGet.exe
-		.nuget\NuGet.targets = .nuget\NuGet.targets
+		global.json = global.json
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LINQToAQL.Tests.Unit", "LINQToAQL.Tests.Unit\LINQToAQL.Tests.Unit.csproj", "{B0A4D07A-34AF-416B-8ACF-87F4CC089B36}"
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "LinqToAql", "src\LinqToAql\LinqToAql.xproj", "{9D45BA15-3A5C-4CE0-9337-8A292D430FC8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LINQToAQL.Tests.Common", "LINQToAQL.Tests.Common\LINQToAQL.Tests.Common.csproj", "{EEA2C1A3-BFA7-40F8-B2D4-CF40D2CE39E5}"
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "LinqToAql.Tests.Common", "test\LinqToAql.Tests.Common\LinqToAql.Tests.Common.xproj", "{42282680-F805-41B6-8C15-A0E217DE030F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LINQToAQL.Tests.Integration", "LINQToAQL.Tests.Integration\LINQToAQL.Tests.Integration.csproj", "{A214C48F-E214-46C5-ACDE-9FFB0B5A0C95}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{9978AA31-0A12-4B76-B174-92F509B4EC45}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "LinqToAql.Tests.Unit", "test\LinqToAql.Tests.Unit\LinqToAql.Tests.Unit.xproj", "{A44FA73F-57E9-4737-9166-D5E10726EDD7}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "LinqToAql.Tests.Integration", "test\LinqToAql.Tests.Integration\LinqToAql.Tests.Integration.xproj", "{C72D29E9-E600-4A34-BB42-8DE318C1221F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,24 +26,30 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{348A9215-DAF5-4D47-87DA-2A32DFAFCBDD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{348A9215-DAF5-4D47-87DA-2A32DFAFCBDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{348A9215-DAF5-4D47-87DA-2A32DFAFCBDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{348A9215-DAF5-4D47-87DA-2A32DFAFCBDD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B0A4D07A-34AF-416B-8ACF-87F4CC089B36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B0A4D07A-34AF-416B-8ACF-87F4CC089B36}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B0A4D07A-34AF-416B-8ACF-87F4CC089B36}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B0A4D07A-34AF-416B-8ACF-87F4CC089B36}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EEA2C1A3-BFA7-40F8-B2D4-CF40D2CE39E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EEA2C1A3-BFA7-40F8-B2D4-CF40D2CE39E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EEA2C1A3-BFA7-40F8-B2D4-CF40D2CE39E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EEA2C1A3-BFA7-40F8-B2D4-CF40D2CE39E5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A214C48F-E214-46C5-ACDE-9FFB0B5A0C95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A214C48F-E214-46C5-ACDE-9FFB0B5A0C95}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A214C48F-E214-46C5-ACDE-9FFB0B5A0C95}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A214C48F-E214-46C5-ACDE-9FFB0B5A0C95}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9D45BA15-3A5C-4CE0-9337-8A292D430FC8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9D45BA15-3A5C-4CE0-9337-8A292D430FC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9D45BA15-3A5C-4CE0-9337-8A292D430FC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9D45BA15-3A5C-4CE0-9337-8A292D430FC8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{42282680-F805-41B6-8C15-A0E217DE030F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42282680-F805-41B6-8C15-A0E217DE030F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42282680-F805-41B6-8C15-A0E217DE030F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42282680-F805-41B6-8C15-A0E217DE030F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A44FA73F-57E9-4737-9166-D5E10726EDD7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A44FA73F-57E9-4737-9166-D5E10726EDD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A44FA73F-57E9-4737-9166-D5E10726EDD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A44FA73F-57E9-4737-9166-D5E10726EDD7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C72D29E9-E600-4A34-BB42-8DE318C1221F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C72D29E9-E600-4A34-BB42-8DE318C1221F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C72D29E9-E600-4A34-BB42-8DE318C1221F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C72D29E9-E600-4A34-BB42-8DE318C1221F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{9D45BA15-3A5C-4CE0-9337-8A292D430FC8} = {5690CA52-0CA5-4AD7-9E82-B13D51F5DA21}
+		{42282680-F805-41B6-8C15-A0E217DE030F} = {9978AA31-0A12-4B76-B174-92F509B4EC45}
+		{A44FA73F-57E9-4737-9166-D5E10726EDD7} = {9978AA31-0A12-4B76-B174-92F509B4EC45}
+		{C72D29E9-E600-4A34-BB42-8DE318C1221F} = {9978AA31-0A12-4B76-B174-92F509B4EC45}
 	EndGlobalSection
 EndGlobal
