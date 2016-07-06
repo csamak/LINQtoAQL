@@ -63,7 +63,7 @@ namespace LinqToAql.Deserialization.Json
             return DeserializeArray(reader, type).Select(curr => curr);
         }
 
-        //This forces no caching (should there be some caching?)
+        //This forces no buffering (should there be some buffering?)
         private IEnumerable<object> DeserializeArray(TextReader textReader, Type type)
         {
             using (var reader = new JsonTextReader(textReader))

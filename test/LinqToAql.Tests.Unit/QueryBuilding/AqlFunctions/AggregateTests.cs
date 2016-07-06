@@ -20,7 +20,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using NUnit.Framework;
 
-namespace LinqToAql.Tests.Unit.QueryBuilding.AqlFunction
+namespace LinqToAql.Tests.Unit.QueryBuilding.AqlFunctions
 {
     internal class AggregateTests : QueryBuildingBase
     {

@@ -25,6 +25,9 @@
     },
 
     "buildOptions": {
-        "embed": "Resources/**"
+        "embed": "Resources/**",
+        "copyToOutput": [
+            "testsettings.json"
+        ]
     }
 }

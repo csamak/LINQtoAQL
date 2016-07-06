@@ -16,27 +16,29 @@
 // under the License.
 
 using System;
-using System.Linq;
-using NUnit.Framework;
+using System.Linq.Expressions;
 
-namespace LinqToAql.Tests.Unit.QueryBuilding.AqlFunction
+namespace LinqToAql.QueryBuilding.AqlConstructors
 {
-    internal class TokenizingTests : QueryBuildingBase
+    //Why doesn't NewExpression happen? Evaluated locally? DateTime is a Struct?
+    internal class DateTimeConstructor : AqlConstructorVisitor
     {
-        [Test]
-        public void WordTokensRemoveEmptyEntries()
+        public override bool IsVisitable(ConstantExpression expression) => expression.Type == typeof(DateTime);
+
+        public override void Visit(ConstantExpression expression)
         {
-            var query = dv.FacebookUsers.Select(u => u.name.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries));
-            Assert.Throws<NotSupportedException>(() => GetQueryString(query.Expression));
+            AqlExpression.AppendFormat("datetime('{0}')",
+                ((DateTime) expression.Value).ToString("yyyy-MM-ddTHH:mm:ss.fffzzz"));
         }
 
-        [Test]
-        public void WordTokensWrongSeparator()
+        public override bool IsVisitable(NewExpression expression)
         {
-            var query = dv.FacebookUsers.Select(u => u.name.Split(new[] { "wrong" }, StringSplitOptions.None));
-            Assert.Throws<NotSupportedException>(() => GetQueryString(query.Expression));
-            query = dv.FacebookUsers.Select(u => u.name.Split('x'));
-            Assert.Throws<NotSupportedException>(() => GetQueryString(query.Expression));
+            return false;
+        }
+
+        public override void Visit(NewExpression expression)
+        {
+            throw new NotImplementedException();
         }
     }
 }

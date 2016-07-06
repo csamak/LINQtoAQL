@@ -18,18 +18,28 @@
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace LinqToAql.QueryBuilding.AqlFunctions.String
+namespace LinqToAql.QueryBuilding.AqlConstructors
 {
-    internal class EndsWith : AqlFunctionVisitor
+    internal class StringConstructor : AqlConstructorVisitor
     {
-        public override bool IsVisitable(MethodCallExpression expression)
+        public override bool IsVisitable(ConstantExpression expression) => expression.Type == typeof(string);
+
+        public override void Visit(ConstantExpression expression)
         {
-            return expression.Method.Equals(typeof(string).GetTypeInfo().GetMethod("EndsWith", new[] { typeof(string) }));
+            AqlExpression.Append($"\"{expression.Value}\"");
         }
 
-        public override void Visit(MethodCallExpression expression)
+        //also feasible to support
+        //String(char, int, int) and String(char, int)
+        public override bool IsVisitable(NewExpression expression)
         {
-            AqlFunction("ends-with", expression.Object, expression.Arguments[0]);
+            return expression.Type == typeof(string) &&
+                   expression.Constructor.Equals(typeof(string).GetTypeInfo().GetConstructor(new[] { typeof(char[]) }));
+        }
+
+        public override void Visit(NewExpression expression)
+        {
+            AqlConstructor("codepoint-to-string", expression.Arguments[0]);
         }
     }
 }

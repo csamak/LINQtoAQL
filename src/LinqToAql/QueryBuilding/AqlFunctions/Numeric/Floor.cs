@@ -19,16 +19,11 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Text;
 
 namespace LinqToAql.QueryBuilding.AqlFunctions.Numeric
 {
     internal class Floor : AqlFunctionVisitor
     {
-        public Floor(StringBuilder aqlExpression, AqlExpressionVisitor visitor) : base(aqlExpression, visitor)
-        {
-        }
-
         public override bool IsVisitable(MethodCallExpression expression)
         {
             return typeof(Math).GetTypeInfo().GetMethods().Where(m => m.Name == "Floor").Contains(expression.Method);

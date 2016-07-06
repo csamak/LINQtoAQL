@@ -15,21 +15,21 @@
 // specific language governing permissions and limitations
 // under the License.
 
-using System.Linq.Expressions;
-using System.Reflection;
+using System.Linq;
+using NUnit.Framework;
 
-namespace LinqToAql.QueryBuilding.AqlFunctions.String
+namespace LinqToAql.Tests.Unit.QueryBuilding.AqlFunctions
 {
-    internal class EndsWith : AqlFunctionVisitor
+    internal class StringTests : QueryBuildingBase
     {
-        public override bool IsVisitable(MethodCallExpression expression)
+        //Cannot be included with other tests since char is not a subclass of object.
+        [Test, Category("StringQuerySet")]
+        public void StringToCodepointSingleChar()
         {
-            return expression.Method.Equals(typeof(string).GetTypeInfo().GetMethod("EndsWith", new[] { typeof(string) }));
+            var indexer = dv.FacebookUsers.Select(u => u.name[0]);
+            Assert.AreEqual("for $u in dataset FacebookUsers return string-to-codepoint($u.name)[0]",
+                GetQueryString(indexer.Expression));
         }
 
-        public override void Visit(MethodCallExpression expression)
-        {
-            AqlFunction("ends-with", expression.Object, expression.Arguments[0]);
-        }
     }
 }

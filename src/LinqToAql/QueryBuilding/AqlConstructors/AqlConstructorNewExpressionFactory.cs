@@ -16,20 +16,18 @@
 // under the License.
 
 using System.Linq.Expressions;
-using System.Reflection;
 
-namespace LinqToAql.QueryBuilding.AqlFunctions.String
+namespace LinqToAql.QueryBuilding.AqlConstructors
 {
-    internal class EndsWith : AqlFunctionVisitor
+    internal class AqlConstructorNewExpressionFactory :
+        SingleExpressionVisitorFactory<AqlConstructorVisitor, NewExpression>
     {
-        public override bool IsVisitable(MethodCallExpression expression)
+        public AqlConstructorNewExpressionFactory()
         {
-            return expression.Method.Equals(typeof(string).GetTypeInfo().GetMethod("EndsWith", new[] { typeof(string) }));
-        }
-
-        public override void Visit(MethodCallExpression expression)
-        {
-            AqlFunction("ends-with", expression.Object, expression.Arguments[0]);
+            RegisterVisitor<DateTimeConstructor>();
+            RegisterVisitor<LineConstructor>();
+            RegisterVisitor<PointConstructor>();
+            RegisterVisitor<StringConstructor>();
         }
     }
 }

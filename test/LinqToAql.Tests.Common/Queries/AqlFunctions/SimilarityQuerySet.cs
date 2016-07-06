@@ -20,7 +20,7 @@ using System.Linq;
 using LinqToAql.Similarity;
 using LinqToAql.Tests.Common.Model.Data;
 
-namespace LinqToAql.Tests.Common.Queries.AqlFunction
+namespace LinqToAql.Tests.Common.Queries.AqlFunctions
 {
     internal class SimilarityQuerySet : QuerySet
     {

@@ -17,17 +17,12 @@
 
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Text;
 using LinqToAql.Similarity;
 
 namespace LinqToAql.QueryBuilding.AqlFunctions.Similarity
 {
     internal class Jaccard : AqlFunctionVisitor
     {
-        public Jaccard(StringBuilder aqlExpression, AqlExpressionVisitor visitor) : base(aqlExpression, visitor)
-        {
-        }
-
         public override bool IsVisitable(MethodCallExpression expression)
         {
             return expression.Method.Name == "Jaccard" && expression.Method.IsGenericMethod &&

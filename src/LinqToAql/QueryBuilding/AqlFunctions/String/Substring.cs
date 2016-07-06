@@ -17,16 +17,11 @@
 
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Text;
 
 namespace LinqToAql.QueryBuilding.AqlFunctions.String
 {
     internal class Substring : AqlFunctionVisitor
     {
-        public Substring(StringBuilder aqlExpression, AqlExpressionVisitor visitor) : base(aqlExpression, visitor)
-        {
-        }
-
         public override bool IsVisitable(MethodCallExpression expression)
         {
             return expression.Method.Equals(typeof(string).GetTypeInfo().GetMethod("Substring", new[] { typeof(int) }));

@@ -18,7 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using LinqToAql.Tests.Common.Queries.AqlFunction;
+using LinqToAql.Tests.Common.Queries.AqlFunctions;
 using NUnit.Framework;
 
 namespace LinqToAql.Tests.Common.Queries

@@ -5,21 +5,23 @@ LINQ to AQL is a .NET client library and LINQ provider for [AsterixDB](http://as
 
 LINQ to AQL supports querying AsterixDB by generating [AQL](http://asterixdb.apache.org/docs/0.8.8-incubating/aql/manual.html) (Asterix Query Language) expressions.
 
-The project is currently pre-release. Later, this document will contain usage instructions and examples. For now, more fine-grained documentation is available on the project's [wiki](https://github.com/csamak/LINQToAQL/wiki).
-
 Dev Setup
 ---------
 Get the [.NET Core](https://www.microsoft.com/net/core) SDK for your platform.
 
+There should be no warnings and no test failures in the following steps.
 
 ### Build
 
-`dotnet build` in `src/LinqToAql` (build output is `src/LinqToAql/bin` by default).
+`dotnet restore` then `dotnet build` in `src/LinqToAql` (build output is `src/LinqToAql/bin` by default).
 
 ### Test
 
-Unit Tests: `dotnet test` in `test/LinqToAql.Tests.Unit`.
-Integration Tests: `dotnet test` in `test/LinqToAql.Tests.Integration`.
+`dotnet restore` in `test/LinqToAql.Tests.Common`
+
+Unit Tests: `dotnet restore` then `dotnet test` in `test/LinqToAql.Tests.Unit`.
+
+Integration Tests: `dotnet restore` then `dotnet test` in `test/LinqToAql.Tests.Integration`.
 
 
 Planned Work

@@ -19,12 +19,16 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 
-namespace LinqToAql.QueryBuilding.AqlFunctions
+namespace LinqToAql.QueryBuilding.AqlConstructors
 {
-    internal abstract class AqlFunctionVisitor : ISingleExpressionVisitor<MethodCallExpression>
+    internal abstract class AqlConstructorVisitor
+        : ISingleExpressionVisitor<NewExpression>, ISingleExpressionVisitor<ConstantExpression>
     {
         protected StringBuilder AqlExpression;
         protected ExpressionVisitor Visitor;
+
+        public abstract bool IsVisitable(ConstantExpression expression);
+        public abstract void Visit(ConstantExpression expression);
 
         public virtual void Initialize(StringBuilder aqlExpression, ExpressionVisitor visitor)
         {
@@ -32,10 +36,10 @@ namespace LinqToAql.QueryBuilding.AqlFunctions
             Visitor = visitor;
         }
 
-        public abstract bool IsVisitable(MethodCallExpression expression);
-        public abstract void Visit(MethodCallExpression expression);
+        public abstract bool IsVisitable(NewExpression expression);
+        public abstract void Visit(NewExpression expression);
 
-        protected void AqlFunction(string name, params Expression[] args)
+        protected void AqlConstructor(string name, params Expression[] args)
         {
             AqlExpression.Append($"{name}(");
             Visitor.Visit(args[0]);

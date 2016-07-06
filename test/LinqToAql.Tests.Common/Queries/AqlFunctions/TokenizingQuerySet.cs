@@ -19,7 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace LinqToAql.Tests.Common.Queries.AqlFunction
+namespace LinqToAql.Tests.Common.Queries.AqlFunctions
 {
     internal class TokenizingQuerySet : QuerySet
     {

@@ -16,21 +16,34 @@
 // under the License.
 
 using System.Linq.Expressions;
-using System.Reflection;
 using LinqToAql.Spatial;
 
-namespace LinqToAql.QueryBuilding.AqlFunctions.Spatial
+namespace LinqToAql.QueryBuilding.AqlConstructors
 {
-    internal class SpatialDistance : AqlFunctionVisitor
+    internal class LineConstructor : AqlConstructorVisitor
     {
-        public override bool IsVisitable(MethodCallExpression expression)
+        private const string CreateLine = "create-line";
+
+        public override bool IsVisitable(ConstantExpression expression)
         {
-            return expression.Method.Equals(typeof(Point).GetTypeInfo().GetMethod("Distance"));
+            return expression.Type == typeof(Line);
         }
 
-        public override void Visit(MethodCallExpression expression)
+        public override void Visit(ConstantExpression expression)
         {
-            AqlFunction("spatial-distance", expression.Object, expression.Arguments[0]);
+            var line = (Line) expression.Value;
+            AqlExpression.Append(
+                $"{CreateLine}(create-point({line.First.X}, {line.First.Y}), create-point({line.Second.X}, {line.Second.Y}))");
+        }
+
+        public override bool IsVisitable(NewExpression expression)
+        {
+            return expression.Type == typeof(Line);
+        }
+
+        public override void Visit(NewExpression expression)
+        {
+            AqlConstructor(CreateLine, expression.Arguments[0], expression.Arguments[1]);
         }
     }
 }

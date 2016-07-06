@@ -15,27 +15,28 @@
 // specific language governing permissions and limitations
 // under the License.
 
+using System;
 using System.Linq;
 using NUnit.Framework;
 
-namespace LinqToAql.Tests.Unit.QueryBuilding.AqlFunction
+namespace LinqToAql.Tests.Unit.QueryBuilding.AqlFunctions
 {
-    internal class StringTests : QueryBuildingBase
+    internal class TokenizingTests : QueryBuildingBase
     {
-        //Cannot be included with other tests since char is not a subclass of object.
-        [Test, Category("StringQuerySet")]
-        public void StringToCodepointSingleChar()
+        [Test]
+        public void WordTokensRemoveEmptyEntries()
         {
-            var indexer = dv.FacebookUsers.Select(u => u.name[0]);
-            Assert.AreEqual("for $u in dataset FacebookUsers return string-to-codepoint($u.name)[0]",
-                GetQueryString(indexer.Expression));
+            var query = dv.FacebookUsers.Select(u => u.name.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries));
+            Assert.Throws<NotSupportedException>(() => GetQueryString(query.Expression));
         }
 
-        //TODO: Aql like
-        //TODO: string-concat
-        //TODO: matches
-        //TODO: replace
-        //TODO: substring-before
-        //TODO: substring-after
+        [Test]
+        public void WordTokensWrongSeparator()
+        {
+            var query = dv.FacebookUsers.Select(u => u.name.Split(new[] { "wrong" }, StringSplitOptions.None));
+            Assert.Throws<NotSupportedException>(() => GetQueryString(query.Expression));
+            query = dv.FacebookUsers.Select(u => u.name.Split('x'));
+            Assert.Throws<NotSupportedException>(() => GetQueryString(query.Expression));
+        }
     }
 }

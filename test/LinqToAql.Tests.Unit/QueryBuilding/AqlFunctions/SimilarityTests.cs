@@ -19,7 +19,7 @@ using System;
 using LinqToAql.Similarity;
 using NUnit.Framework;
 
-namespace LinqToAql.Tests.Unit.QueryBuilding.AqlFunction
+namespace LinqToAql.Tests.Unit.QueryBuilding.AqlFunctions
 {
     internal class SimilarityTests : QueryBuildingBase
     {

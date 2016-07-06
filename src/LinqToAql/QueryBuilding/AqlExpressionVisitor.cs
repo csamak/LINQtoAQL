@@ -23,23 +23,31 @@ using System.Reflection;
 using System.Text;
 using LinqToAql.DataAnnotations;
 using LinqToAql.Extensions;
+using LinqToAql.QueryBuilding.AqlConstructors;
 using LinqToAql.QueryBuilding.AqlFunctions;
 using LinqToAql.Spatial;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Clauses.ResultOperators;
 using Remotion.Linq.Parsing;
+using Point = LinqToAql.Spatial.Point;
 
 namespace LinqToAql.QueryBuilding
 {
     internal class AqlExpressionVisitor : ThrowingExpressionVisitor
     {
         private readonly StringBuilder _aqlExpression = new StringBuilder();
-        private readonly AqlFunctionContext _aqlFunctionContext;
+        private readonly SingleExpressionVisitorFactory<AqlFunctionVisitor, MethodCallExpression> _aqlFunctionVisitorFactory;
+        private readonly SingleExpressionVisitorFactory<AqlConstructorVisitor, NewExpression> _aqlConstructorNewVisitorFactory;
+        private readonly SingleExpressionVisitorFactory<AqlConstructorVisitor, ConstantExpression> _aqlConstructorConstantVisitorFactory;
 
         private AqlExpressionVisitor()
         {
-            _aqlFunctionContext = new AqlFunctionContext(_aqlExpression, this);
+            //When UDF support is added, a public API can be exposed through the context to allow
+            //registration to this factory
+            _aqlFunctionVisitorFactory = new AqlFunctionFactory();
+            _aqlConstructorNewVisitorFactory = new AqlConstructorNewExpressionFactory();
+            _aqlConstructorConstantVisitorFactory = new AqlConstructorConstantExpressionFactory();
         }
 
         public static string GetAqlExpression(Expression linqExpression)
@@ -171,22 +179,9 @@ namespace LinqToAql.QueryBuilding
 
         protected override Expression VisitConstant(ConstantExpression expression)
         {
-            if (expression.Type == typeof(DateTime))
-                _aqlExpression.AppendFormat("datetime('{0}')",
-                    ((DateTime) expression.Value).ToString("yyyy-MM-ddTHH:mm:ss.fffzzz"));
-            else if (expression.Type == typeof(string))
-                _aqlExpression.Append($"\"{expression.Value}\"");
-            else if (expression.Type == typeof(Point))
-            {
-                var point = (Point) expression.Value;
-                _aqlExpression.Append($"create-point({point.X}, {point.Y})");
-            }
-            else if (expression.Type == typeof(Line))
-            {
-                var line = (Line) expression.Value;
-                _aqlExpression.Append(
-                    $"create-line(create-point({line.First.X}, {line.First.Y}), create-point({line.Second.X}, {line.Second.Y}))");
-            }
+            var constructor = _aqlConstructorConstantVisitorFactory.CreateVisitableVisitor(expression, _aqlExpression, this);
+            if (constructor != null)
+                constructor.Visit(expression);
             else if (expression.Value is IEnumerable)
             {
                 _aqlExpression.Append("[");
@@ -208,7 +203,7 @@ namespace LinqToAql.QueryBuilding
 
         protected override Expression VisitMethodCall(MethodCallExpression expression)
         {
-            var function = _aqlFunctionContext.FindVisitableVisitor(expression);
+            var function = _aqlFunctionVisitorFactory.CreateVisitableVisitor(expression, _aqlExpression, this);
             if (function != null)
             {
                 function.Visit(expression);
@@ -219,28 +214,9 @@ namespace LinqToAql.QueryBuilding
 
         protected override Expression VisitNew(NewExpression expression)
         {
-            if (expression.Type == typeof(string))
-            {
-                _aqlExpression.Append("codepoint-to-string(");
-                Visit(expression.Arguments[0]);
-                _aqlExpression.Append(")");
-            }
-            else if (expression.Type == typeof(Point))
-            {
-                _aqlExpression.Append("create-point(");
-                Visit(expression.Arguments[0]);
-                _aqlExpression.Append(", ");
-                Visit(expression.Arguments[1]);
-                _aqlExpression.Append(")");
-            }
-            else if (expression.Type == typeof(Line))
-            {
-                _aqlExpression.Append("create-line(");
-                Visit(expression.Arguments[0]);
-                _aqlExpression.Append(", ");
-                Visit(expression.Arguments[1]);
-                _aqlExpression.Append(")");
-            }
+            var constructor = _aqlConstructorNewVisitorFactory.CreateVisitableVisitor(expression, _aqlExpression, this);
+            if (constructor != null)
+                constructor.Visit(expression);
             else
             {
                 _aqlExpression.Append("{");

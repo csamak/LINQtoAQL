@@ -16,20 +16,26 @@
 // under the License.
 
 using System.Linq.Expressions;
-using System.Reflection;
+using LinqToAql.Spatial;
 
-namespace LinqToAql.QueryBuilding.AqlFunctions.String
+namespace LinqToAql.QueryBuilding.AqlConstructors
 {
-    internal class EndsWith : AqlFunctionVisitor
+    internal class PointConstructor : AqlConstructorVisitor
     {
-        public override bool IsVisitable(MethodCallExpression expression)
+        private const string CreatePoint = "create-point";
+        public override bool IsVisitable(ConstantExpression expression) => expression.Type == typeof(Point);
+
+        public override void Visit(ConstantExpression expression)
         {
-            return expression.Method.Equals(typeof(string).GetTypeInfo().GetMethod("EndsWith", new[] { typeof(string) }));
+            var point = (Point) expression.Value;
+            AqlExpression.Append($"{CreatePoint}({point.X}, {point.Y})");
         }
 
-        public override void Visit(MethodCallExpression expression)
+        public override bool IsVisitable(NewExpression expression) => expression.Type == typeof(Point);
+
+        public override void Visit(NewExpression expression)
         {
-            AqlFunction("ends-with", expression.Object, expression.Arguments[0]);
+            AqlConstructor(CreatePoint, expression.Arguments[0], expression.Arguments[1]);
         }
     }
 }

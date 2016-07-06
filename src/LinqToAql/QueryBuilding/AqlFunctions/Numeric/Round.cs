@@ -19,17 +19,12 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Text;
 
 namespace LinqToAql.QueryBuilding.AqlFunctions.Numeric
 {
     //Math.Round defaults to MidpointRounding.ToEven, which is equivalent to round-half-to-even in AQL
     internal class Round : AqlFunctionVisitor
     {
-        public Round(StringBuilder aqlExpression, AqlExpressionVisitor visitor) : base(aqlExpression, visitor)
-        {
-        }
-
         public override bool IsVisitable(MethodCallExpression expression)
         {
             return

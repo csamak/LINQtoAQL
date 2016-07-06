@@ -73,8 +73,7 @@ namespace LinqToAql
         ///     </list>
         /// </summary>
         public string Dataverse
-            =>
-                _dataverse ??
+            => _dataverse ??
                 GetType().GetTypeInfo().GetAttributeValue((DataverseAttribute d) => d.Name) ?? GetType().Name;
 
         //For every public Dataset field or settable property that has not been set, assign it a queryable Dataset

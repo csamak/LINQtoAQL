@@ -18,17 +18,12 @@
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Text;
 using LinqToAql.Similarity;
 
 namespace LinqToAql.QueryBuilding.AqlFunctions.Similarity
 {
     internal class EditDistance : AqlFunctionVisitor
     {
-        public EditDistance(StringBuilder aqlExpression, AqlExpressionVisitor visitor) : base(aqlExpression, visitor)
-        {
-        }
-
         public override bool IsVisitable(MethodCallExpression expression)
         {
             return

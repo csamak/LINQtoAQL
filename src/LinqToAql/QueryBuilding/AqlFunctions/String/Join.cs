@@ -19,16 +19,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Text;
 
 namespace LinqToAql.QueryBuilding.AqlFunctions.String
 {
     internal class Join : AqlFunctionVisitor
     {
-        public Join(StringBuilder aqlExpression, AqlExpressionVisitor visitor) : base(aqlExpression, visitor)
-        {
-        }
-
         public override bool IsVisitable(MethodCallExpression expression)
         {
             return

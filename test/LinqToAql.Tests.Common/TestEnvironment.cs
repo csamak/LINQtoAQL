@@ -35,7 +35,7 @@ namespace LinqToAql.Tests.Common
         private static readonly IConfigurationRoot config =
             new ConfigurationBuilder().AddInMemoryCollection(defaultConfigValues)
                 .AddJsonFile("testsettings.json", true)
-                .AddEnvironmentVariables()
+                .AddEnvironmentVariables("LinqToAql.Tests.")
                 .Build();
 
         private static readonly Uri AsterixDbEndpoint = new Uri(config[ConfigAsterixDbEndpoint]);
