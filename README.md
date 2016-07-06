@@ -23,6 +23,9 @@ Unit Tests: `dotnet restore` then `dotnet test` in `test/LinqToAql.Tests.Unit`.
 
 Integration Tests: `dotnet restore` then `dotnet test` in `test/LinqToAql.Tests.Integration`.
 
+The AsterixDB endpoint defaults to http://localhost:19002.
+
+To change the endpoint, update the `AsterixDBEndpoint key` in testsettings.json. Alternatively, set the environment variable `LinqToAql.Tests.AsterixDBEndpoint` (overrides the json file).
 
 Planned Work
 ------------
